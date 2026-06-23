@@ -1,3 +1,4 @@
-import FlipClockCountdown from './FlipClockCountDown';
+import FlipCardPanel from './FlipCardPanel';
 export * from './types';
-export default FlipClockCountdown;
+export { default as FlipCard } from './FlipCard';
+export default FlipCardPanel;

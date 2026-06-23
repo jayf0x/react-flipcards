@@ -1,162 +1,73 @@
 import React from 'react';
 
+/** A single card's displayed value. */
 export type Digit = number | string;
 
-export interface FlipClockCountdownUnitTimeFormatted {
-  readonly current: Digit[];
-  readonly next: Digit[];
+/** A card label — plain text or any React node (icon, markup, etc.). */
+export type FlipCardLabel = string | React.ReactElement;
+
+/**
+ * Imperative handle exposed via `ref`. Lets consumers drive the cards
+ * without re-rendering the parent on every value change.
+ */
+export interface FlipCardRef {
+  /** Set every card's value at once, animating any that changed. */
+  set(values: number[]): void;
+  /** Increment a single card at `index` (wraps 9 → 0). */
+  increment(index: number): void;
+  /** Reset all cards back to 0. */
+  reset(): void;
+  /** Read the currently displayed values. */
+  getValue(): number[];
 }
 
-export interface FlipClockCountdownTimeDeltaFormatted {
-  readonly days: FlipClockCountdownUnitTimeFormatted;
-  readonly hours: FlipClockCountdownUnitTimeFormatted;
-  readonly minutes: FlipClockCountdownUnitTimeFormatted;
-  readonly seconds: FlipClockCountdownUnitTimeFormatted;
-}
-
-export interface FlipClockCountdownTimeDelta {
-  readonly total: number;
-  readonly days: number;
-  readonly hours: number;
-  readonly minutes: number;
-  readonly seconds: number;
-}
-
-export interface FlipClockCountdownState {
-  readonly timeDelta: FlipClockCountdownTimeDelta;
-  readonly completed: boolean;
-}
-
-export type FlipClockCountdownTimeDeltaFn = (props: FlipClockCountdownState) => void;
-
-export type FlipClockCountdownLabel = string | React.ReactElement;
-
-export interface FlipClockCountdownProps
-  extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+export interface FlipCardPanelProps extends Omit<
+  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+  'children'
+> {
+  /** Number of flip cards to render. */
+  readonly nrCards: number;
   /**
-   * The target date to countdown to.
-   * It can be a Date object, a timestamp (number), or a date string.
+   * Initial value (0..9) for each card. Missing entries default to 0.
+   * Only read on mount — use the ref API to update afterwards.
    */
-  readonly to: Date | number | string;
+  readonly initialValue?: number[];
+  /** Optional label under each card, e.g. ['Hours', 'Minutes', 'Seconds']. */
+  readonly labels?: FlipCardLabel[];
   /**
-   * Days will be shown in hours.
-   *
-   * @default false
-   */
-  readonly daysInHours?: boolean;
-  /**
-   * Alternative handler for the current time.
-   *
-   * @default Date.now
-   */
-  now?: () => Date | number | string;
-  /**
-   * By default, the countdown will be hidden when it completed (or show children if provided).
-   * This will keep the timer in place and stuck at zeros when the countdown is completed.
-   */
-  hideOnComplete?: boolean;
-  /**
-   * @deprecated
-   * Props to be passed to div element that is container for all elements.
-   * You can use this if you want to style or select the whole container.
-   */
-  readonly containerProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-  /**
-   * A callback will be called when countdown completed.
-   */
-  readonly onComplete?: () => void;
-  /**
-   * A callback will be called every second.
-   *
-   * @param timeDelta
-   * @param completed represents the state of the countdown. `true` if the countdown ended, otherwise `false`.
-   */
-  readonly onTick?: FlipClockCountdownTimeDeltaFn;
-  /**
-   * Each element represents the render state of each section (day, hour, minute, second).
-   *
-   * If `true` section will be rendered, `false` otherwise.
-   *
-   * @default [true, true, true, true]
-   */
-  readonly renderMap?: [boolean, boolean, boolean, boolean];
-  /**
-   * An array of labels used to represent information for each section (day, hour, minute, second).
-   *
-   * @default ['Days', 'Hours', 'Minutes', 'Seconds']
-   */
-  readonly labels?: [
-    FlipClockCountdownLabel,
-    FlipClockCountdownLabel,
-    FlipClockCountdownLabel,
-    FlipClockCountdownLabel
-  ];
-  /**
-   * Set it to `false` if you don't want to show the labels.
-   *
+   * Toggle label visibility.
    * @default true
    */
   readonly showLabels?: boolean;
+  /** Styles for the digit blocks (width, height, fontSize, color, background, ...). */
+  readonly blockStyle?: React.CSSProperties;
+  /** Styles applied to the labels (font-size, color, ...). */
+  readonly labelStyle?: React.CSSProperties;
   /**
-   * Set it to `false` if you don't want to show the separators (colon) between time unit.
-   *
-   * @default true
+   * Show colon separators between cards.
+   * @default false
    */
   readonly showSeparators?: boolean;
-  /**
-   * The style will be applied to labels like `font-size`, `color`, etc.
-   */
-  labelStyle?: React.CSSProperties;
-  /**
-   * The style will be applied to digit blocks like `font-size`, `color`, `width`, `height`, etc.
-   */
-  digitBlockStyle?: React.CSSProperties;
-  /**
-   * The style will be applied to separator (colon), includes `size` and `color`.
-   */
-  separatorStyle?: {
+  /** Separator (colon) styling. */
+  readonly separatorStyle?: {
     color?: React.CSSProperties['color'];
     size?: number | string;
   };
   /**
-   * The style will be applied to divider, includes `color` and `height`.
+   * Show the horizontal divider across each flip card.
+   * @default true
    */
-  dividerStyle?: {
+  readonly showDivider?: boolean;
+  /** Divider styling. */
+  readonly dividerStyle?: {
     color?: React.CSSProperties['color'];
     height?: React.CSSProperties['borderBottomWidth'];
   };
   /**
-   * Duration (in second) when flip card. Valid value in range (0, 1).
-   *
+   * Flip animation duration in seconds.
    * @default 0.7
    */
-  duration?: number;
-  /**
-   * Whether or not to stop the clock when the visibilityState is hidden,
-   * enabling this feature will prevent the component gets derailed if we
-   * switch between browser tabs.
-   *
-   * @default false
-   */
-  stopOnHiddenVisibility?: boolean;
-  /**
-   * Custom clock spacing.
-   */
-  spacing?: {
-    /**
-     * Space between unit times and separators.
-     */
-    clock?: number | string;
-    /**
-     * Space between blocks in each unit of time.
-     */
-    digitBlock?: number | string;
-  };
-  /**
-   * Whether or not to render the clock on the server.
-   * If set to `true`, the clock will be rendered on the server side with zeros.
-   *
-   * @default false
-   */
-  renderOnServer?: boolean;
+  readonly duration?: number;
+  /** Spacing between cards / separators. */
+  readonly spacing?: number | string;
 }

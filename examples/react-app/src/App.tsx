@@ -1,92 +1,55 @@
 import React from 'react';
-
-import FlipClockCountdown from 'react-flip-clock-countdown';
+import FlipCardPanel, { FlipCardRef } from 'react-flip-cards';
 
 const App = () => {
-  return (
-    <React.Fragment>
-      <h1>React flip-clock countdown</h1>
-      <div style={{ marginBottom: 30 }}>
-        <h2>Default</h2>
-        <FlipClockCountdown to={new Date().getTime() + 24 * 3600 * 1000 + 5000}>Finished</FlipClockCountdown>
-      </div>
-      <div style={{ marginBottom: 30 }}>
-        <h1>Default without completion component</h1>
-        <FlipClockCountdown hideOnComplete={false} showLabels={false} to={new Date().getTime() + 1000 * 3} />
-      </div>
-      <div style={{ marginBottom: 30 }}>
-        <h2>Custom styles</h2>
-        <div style={{ marginBottom: 16 }}>
-          <FlipClockCountdown
-            to={new Date().getTime() + 24 * 3600 * 1000 + 5000}
-            labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
-            labelStyle={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase' }}
-            digitBlockStyle={{ width: 40, height: 60, fontSize: 30 }}
-            dividerStyle={{ color: 'red', height: 1 }}
-            separatorStyle={{ color: 'red', size: '6px' }}
-            duration={0.5}
-          >
-            Finished
-          </FlipClockCountdown>
-        </div>
-        <div>
-          <FlipClockCountdown className='flip-clock' to={new Date().getTime() + 24 * 3600 * 1000 + 5000} />
-        </div>
-      </div>
-      <div style={{ marginBottom: 30 }}>
-        <h2>Custom labels</h2>
-        <div style={{ marginBottom: 16 }}>
-          <FlipClockCountdown
-            className='flip-clock'
-            to={new Date().getTime() + 24 * 3600 * 1000 + 5000}
-            labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
-          />
-        </div>
+  // Score counter — 3 digit scoreboard driven entirely through the ref.
+  const scoreRef = React.useRef<FlipCardRef>(null);
 
-        <h2>Element labels</h2>
-        <div style={{ marginBottom: 70 }}>
-          <FlipClockCountdown
-            className='flip-clock'
-            to={new Date().getTime() + 24 * 3600 * 1000 + 5000}
-            labels={[
-              <div>
-                Element
-                <br />
-                Label
-                <br />
-                with BR Tag
-              </div>,
-              'HOURS',
-              'MINUTES',
-              'SECONDS'
-            ]}
-          />
+  const addPoints = (n: number) => {
+    const current = scoreRef.current?.getValue() ?? [0, 0, 0];
+    const score = Math.min(999, current.reduce((acc, d) => acc * 10 + d, 0) + n);
+    const padded = String(score).padStart(3, '0').split('').map(Number);
+    scoreRef.current?.set(padded);
+  };
+
+  // Lap counter — increment a single card.
+  const lapRef = React.useRef<FlipCardRef>(null);
+
+  return (
+    <div style={{ fontFamily: 'sans-serif', padding: 32 }}>
+      <h1>react-flip-cards</h1>
+
+      <section style={{ marginBottom: 48 }}>
+        <h2>Score counter</h2>
+        <FlipCardPanel ref={scoreRef} nrCards={3} blockStyle={{ width: 60, height: 80, fontSize: 48 }} />
+        <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+          <button onClick={() => addPoints(1)}>+1</button>
+          <button onClick={() => addPoints(3)}>+3</button>
+          <button onClick={() => addPoints(7)}>+7</button>
+          <button onClick={() => scoreRef.current?.reset()}>Reset</button>
         </div>
-        <div>
-          <FlipClockCountdown
-            className='flip-clock'
-            to={new Date().getTime() + 24 * 3600 * 1000 + 5000}
-            showLabels={false}
-          />
+      </section>
+
+      <section style={{ marginBottom: 48 }}>
+        <h2>Lap counter</h2>
+        <FlipCardPanel ref={lapRef} nrCards={1} labels={['Lap']} blockStyle={{ width: 60, height: 80, fontSize: 48 }} />
+        <div style={{ marginTop: 24 }}>
+          <button onClick={() => lapRef.current?.increment(0)}>Next lap</button>
         </div>
-      </div>
-      <div>
-        <h2>Hide separators</h2>
-        <FlipClockCountdown
-          className='flip-clock'
-          to={new Date().getTime() + 24 * 3600 * 1000 + 5000}
-          showSeparators={false}
+      </section>
+
+      <section>
+        <h2>Static scoreboard</h2>
+        <FlipCardPanel
+          nrCards={5}
+          initialValue={[1, 2, 3, 4, 5]}
+          showLabels={false}
+          showSeparators
+          separatorStyle={{ color: '#888' }}
+          blockStyle={{ width: 50, height: 70, fontSize: 40 }}
         />
-      </div>
-      <div>
-        <h2>Show/Hide sections</h2>
-        <FlipClockCountdown
-          className='flip-clock'
-          to={new Date().getTime() + 24 * 3600 * 1000 + 5000}
-          renderMap={[false, true, true, true]}
-        />
-      </div>
-    </React.Fragment>
+      </section>
+    </div>
   );
 };
 
