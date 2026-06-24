@@ -15,9 +15,9 @@ Update them statically (props) or imperatively through a `ref`.
 ## Install
 
 ```bash
-npm install --save react-flip-cards
+bun add react-flip-cards
 # or
-yarn add react-flip-cards
+npm install react-flip-cards
 ```
 
 Import the component and its stylesheet:

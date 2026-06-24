@@ -1,73 +1,32 @@
-name: Build and Test
+name: CI
 
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: ['master']
+    branches: ['main']
   pull_request:
-    branches: ['master']
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: ['main']
   workflow_dispatch:
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        version: [16, 18, 20, 21, 22]
+  ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ matrix.version }}
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Get yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-  unit-tests:
-    strategy:
-      matrix:
-        version: [16, 18, 20, 21, 22]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.version }}
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Get yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
-
-      - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Lint
-        run: npm run test:lint
+        run: bun run lint
 
-      - name: Run unit tests
-        run: npm run test:unit
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun run test
+
+      - name: Build
+        run: bun run build
