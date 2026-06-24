@@ -12,6 +12,8 @@ This is **not** a countdown component. It renders a row of flip cards and lets
 **you** own the values — drive them from a score, a timer, a data feed, anything.
 Update them statically (props) or imperatively through a `ref`.
 
+**[▶ Live demo & interactive examples](https://jayf0x.github.io/react-flipcards/)**
+
 ## Install
 
 ```bash
@@ -121,7 +123,30 @@ in your own CSS — or set per-instance via `blockStyle` / `labelStyle` etc.:
 - **Lap counter** — `increment(0)` a single card.
 - **Scoreboard** — multi-digit score, e.g. `[1, 2, 3]` = "123".
 
-See [`examples/react-app`](./examples/react-app) for a working score + lap counter.
+All of these are live (with copyable source) in the [demo](https://jayf0x.github.io/react-flipcards/):
+ping-pong scoreboard, wall clock, stopwatch, lap counter and a data ticker.
+
+## Development
+
+This repo uses [Bun](https://bun.sh) and [Vite](https://vite.dev). The demo is a
+[Ladle](https://ladle.dev) story book under [`demo/`](./demo).
+
+```bash
+bun install        # library deps
+bun run build      # build dist/ (ESM + CJS + types + css)
+bun run test       # vitest
+bun run lint       # eslint
+bun run typecheck  # tsc
+
+cd demo
+bun install
+bun run dev        # Ladle dev server with all stories
+bun run build:gh   # static site for GitHub Pages
+bun run test       # smoke-renders every story
+```
+
+The demo deploys to GitHub Pages automatically on every `v*` tag, or manually via
+`./scripts/release-demo.sh`. Enable it once under **Settings → Pages → Source: GitHub Actions**.
 
 ## License
 

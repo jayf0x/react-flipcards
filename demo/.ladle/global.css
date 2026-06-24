@@ -1,0 +1,88 @@
+.demo-root {
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  padding: 32px;
+  color: #1a1a1a;
+}
+
+.demo-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.demo-stage h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.demo-stage p {
+  margin: 0;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.demo-btn {
+  appearance: none;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  color: #1a1a1a;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.demo-btn:hover {
+  background: #f3f3f3;
+  border-color: #b5b5b5;
+}
+
+.demo-btn:active {
+  background: #e8e8e8;
+}
+
+.demo-btn--primary {
+  background: #0f181a;
+  border-color: #0f181a;
+  color: #fff;
+}
+
+.demo-btn--primary:hover {
+  background: #1d2c30;
+}
+
+.demo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.demo-colon {
+  font-size: 44px;
+  font-weight: 700;
+  color: #0f181a;
+}
+
+.demo-banner {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0a7d33;
+  min-height: 22px;
+}

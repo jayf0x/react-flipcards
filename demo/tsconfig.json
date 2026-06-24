@@ -11,7 +11,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": ["vitest/globals", "vite/client"],
+    "baseUrl": ".",
+    "paths": { "react-flip-cards": ["../src/index.ts"] }
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", ".ladle", "smoke.test.tsx", "vite.config.ts"]
 }
