@@ -71,21 +71,22 @@ export const PingPongScoreboard: Story = {
 
     const point = (i: 0 | 1) => setScore((s) => (winner(s) === null ? bump(s, i) : s));
     const win = winner(score);
+    const names = ['Cap', 'Cook'] as const;
 
     return (
-      <Stage title='Ping-pong scoreboard' hint='First to 11, win by 2. Click a side to award a point.'>
+      <Stage title='Ping-pong scoreboard' hint='First to 11, win by 2. Click a player to award a point.'>
         <div className='demo-row'>
-          <FlipCardPanel ref={left} nrCards={2} labels={['You']} blockStyle={cell} />
+          <FlipCardPanel ref={left} nrCards={2} labels={[names[0]]} blockStyle={cell} />
           <span className='demo-colon'>:</span>
-          <FlipCardPanel ref={right} nrCards={2} labels={['Rival']} blockStyle={cell} />
+          <FlipCardPanel ref={right} nrCards={2} labels={[names[1]]} blockStyle={cell} />
         </div>
-        <div className='demo-banner'>{win !== null ? `🏆 ${win === 0 ? 'You' : 'Rival'} win!` : ''}</div>
+        <div className='demo-banner'>{win !== null ? `🏆 ${names[win]} wins!` : ''}</div>
         <div className='demo-controls'>
           <Button primary onClick={() => point(0)}>
-            + You
+            + {names[0]}
           </Button>
           <Button primary onClick={() => point(1)}>
-            + Rival
+            + {names[1]}
           </Button>
           <Button onClick={() => setScore([0, 0])}>Reset</Button>
         </div>
@@ -95,66 +96,44 @@ export const PingPongScoreboard: Story = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Stopwatch — MM:SS, start / stop / reset.                            */
-/* ------------------------------------------------------------------ */
-export const Stopwatch: Story = {
-  render: () => {
-    const ref = useRef<FlipCardRef>(null);
-    const [running, setRunning] = useState(false);
-    const elapsed = useRef(0);
-
-    useEffect(() => {
-      if (!running) return;
-      const id = setInterval(() => {
-        elapsed.current += 1;
-        const mm = Math.floor(elapsed.current / 60) % 100;
-        const ss = elapsed.current % 60;
-        ref.current?.set([...toDigits(mm, 2), ...toDigits(ss, 2)]);
-      }, 1000);
-      return () => clearInterval(id);
-    }, [running]);
-
-    const reset = () => {
-      elapsed.current = 0;
-      setRunning(false);
-      ref.current?.reset();
-    };
-
-    return (
-      <Stage title='Stopwatch' hint='Manual MM:SS timer. The component just renders — your code owns the ticking.'>
-        <FlipCardPanel ref={ref} nrCards={4} showSeparators separatorStyle={{ color: '#0f181a' }} blockStyle={cell} />
-        <div className='demo-controls'>
-          <Button primary onClick={() => setRunning((r) => !r)}>
-            {running ? 'Stop' : 'Start'}
-          </Button>
-          <Button onClick={reset}>Reset</Button>
-        </div>
-      </Stage>
-    );
-  }
-};
-
-/* ------------------------------------------------------------------ */
-/* Countdown — pick minutes, watch MM:SS count down to a "Liftoff".    */
+/* Countdown — add time, Start/Stop, count down MM:SS to "Liftoff".    */
 /* ------------------------------------------------------------------ */
 export const Countdown: Story = {
   render: () => {
     const ref = useRef<FlipCardRef>(null);
-    const [left, setLeft] = useState(0); // seconds remaining
-    const running = left > 0;
+    const [left, setLeft] = useState(30); // seconds remaining
+    const [running, setRunning] = useState(false);
 
     useEffect(() => {
       ref.current?.set([...toDigits(Math.floor(left / 60), 2), ...toDigits(left % 60, 2)]);
     }, [left]);
 
+    // Tick once a second while running; stop automatically at zero.
     useEffect(() => {
       if (!running) return;
-      const id = setInterval(() => setLeft((s) => Math.max(0, s - 1)), 1000);
+      const id = setInterval(() => {
+        setLeft((s) => {
+          if (s <= 1) {
+            setRunning(false);
+            return 0;
+          }
+          return s - 1;
+        });
+      }, 1000);
       return () => clearInterval(id);
     }, [running]);
 
+    const add = (secs: number) => {
+      setRunning(false);
+      setLeft((s) => Math.min(99 * 60 + 59, s + secs));
+    };
+    const reset = () => {
+      setRunning(false);
+      setLeft(0);
+    };
+
     return (
-      <Stage title='Countdown timer' hint='Drive set() from a remaining-seconds counter. Reaches 0 → liftoff.'>
+      <Stage title='Countdown timer' hint='Add time, hit Start, and it counts down to liftoff. Stop pauses.'>
         <FlipCardPanel
           ref={ref}
           nrCards={4}
@@ -169,17 +148,15 @@ export const Countdown: Story = {
           dividerStyle={{ color: '#ffffff33' }}
         />
         <div className='demo-banner' style={{ color: '#db2777' }}>
-          {left === 0 ? '🚀 Liftoff!' : ''}
+          {!running && left === 0 ? '🚀 Liftoff!' : ''}
         </div>
         <div className='demo-controls'>
-          <Button primary onClick={() => setLeft(10)}>
-            10s
+          <Button primary onClick={() => setRunning((r) => !r)}>
+            {running ? 'Stop' : 'Start'}
           </Button>
-          <Button primary onClick={() => setLeft(60)}>
-            1m
-          </Button>
-          <Button onClick={() => setLeft((s) => s + 30)}>+30s</Button>
-          <Button onClick={() => setLeft(0)}>Reset</Button>
+          <Button onClick={() => add(10)}>+10s</Button>
+          <Button onClick={() => add(60)}>+1m</Button>
+          <Button onClick={reset}>Reset</Button>
         </div>
       </Stage>
     );

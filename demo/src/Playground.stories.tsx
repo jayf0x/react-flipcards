@@ -68,10 +68,13 @@ export const Configurable: Story = {
 
     useEffect(() => {
       if (!args.autoplay) return;
-      const id = setInterval(roll, 1000);
+      // Never roll again until the current flip has finished, otherwise a card
+      // gets a new value mid-animation. Leave a small gap after the flip.
+      const period = args.duration * 1000 + 300;
+      const id = setInterval(roll, period);
       return () => clearInterval(id);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [args.autoplay, args.nrCards]);
+    }, [args.autoplay, args.nrCards, args.duration]);
 
     return (
       <Stage title='Live playground' hint='Edit any prop in the Controls panel. Roll to see the cards flip.'>

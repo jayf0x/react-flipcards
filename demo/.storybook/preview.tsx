@@ -17,14 +17,15 @@ const themes = {
     '--demo-code-bg': '#f0f0f0'
   },
   dark: {
-    '--demo-bg': '#0f181a',
+    // Kept distinct from the cards' default #0f181a so they don't blend in.
+    '--demo-bg': '#243240',
     '--demo-fg': '#f1f1f1',
-    '--demo-muted': '#9aa4a7',
+    '--demo-muted': '#a7b2bd',
     '--demo-accent': '#38bdf8',
-    '--demo-btn-bg': '#1d2c30',
-    '--demo-btn-border': '#33474d',
-    '--demo-btn-hover': '#26393f',
-    '--demo-code-bg': '#1d2c30'
+    '--demo-btn-bg': '#33424f',
+    '--demo-btn-border': '#46596a',
+    '--demo-btn-hover': '#3e4f5e',
+    '--demo-code-bg': '#1b2733'
   }
 } as const;
 
@@ -37,7 +38,7 @@ const preview: Preview = {
     a11y: { test: 'todo' },
     // Match Storybook's own canvas background to the active theme.
     darkMode: {
-      dark: { appBg: '#0f181a', appContentBg: '#0f181a' },
+      dark: { appBg: '#243240', appContentBg: '#243240' },
       light: { appBg: '#ffffff', appContentBg: '#ffffff' }
     }
   },

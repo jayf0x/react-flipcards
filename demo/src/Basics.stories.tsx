@@ -19,8 +19,8 @@ export const WithLabels: Story = {
     <Stage title='Labels' hint='Give each card a label. Strings or any React node work.'>
       <FlipCardPanel
         nrCards={3}
-        initialValue={[1, 3, 0]}
-        labels={['Hours', 'Minutes', 'Seconds']}
+        initialValue={[4, 1, 2]}
+        labels={['Wins', 'Draws', 'Losses']}
         blockStyle={{ width: 56, height: 76, fontSize: 44 }}
       />
     </Stage>
