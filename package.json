@@ -1,6 +1,6 @@
 {
   "name": "react-flip-cards",
-  "version": "0.0.-1",
+  "version": "0.0.0",
   "description": "A generic, ref-driven 3D animated flip-card panel for React.",
   "author": "leenguyen",
   "license": "MIT",
