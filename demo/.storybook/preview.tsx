@@ -1,7 +1,15 @@
 import type { Preview } from '@storybook/react';
+import { create } from '@storybook/theming/create';
 import { useEffect } from 'react';
 import { useDarkMode } from 'storybook-dark-mode';
 import './global.css';
+
+// Branding shared by both manager themes (shown in the sidebar header).
+const brand = {
+  brandTitle: 'react-flip-cards',
+  brandUrl: 'https://github.com/jayf0x/react-flipcards',
+  brandTarget: '_blank'
+};
 
 // Light/dark palettes pushed onto the .demo-root wrapper via CSS vars so every
 // story (and its buttons/labels) follows the dark-mode toggle in the toolbar.
@@ -40,8 +48,8 @@ const preview: Preview = {
     a11y: { test: 'todo' },
     // Match Storybook's own canvas background to the active theme.
     darkMode: {
-      dark: { appBg: '#243240', appContentBg: '#243240' },
-      light: { appBg: '#ffffff', appContentBg: '#ffffff' }
+      dark: create({ base: 'dark', appBg: '#243240', appContentBg: '#243240', ...brand }),
+      light: create({ base: 'light', appBg: '#ffffff', appContentBg: '#ffffff', ...brand })
     }
   },
   decorators: [

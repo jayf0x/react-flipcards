@@ -1,15 +1,18 @@
 {
   "name": "react-flip-cards",
   "version": "0.0.-1",
-  "description": "A generic, ref-driven 3D animated flip-card panel for React.",
-  "author": "leenguyen",
+  "description": "Tiny (~2kB), ref-driven 3D flip-card component for React. One flexible primitive for flip clocks, countdowns, counters, tickers and scoreboards.",
+  "author": "jayf0x",
   "license": "MIT",
   "type": "module",
-  "repository": "https://github.com/sLeeNguyen/react-flip-clock-countdown",
-  "bugs": {
-    "url": "https://github.com/sLeeNguyen/react-flip-clock-countdown/issues"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayf0x/react-flipcards.git"
   },
-  "homepage": "https://github.com/sLeeNguyen/react-flip-clock-countdown#readme",
+  "bugs": {
+    "url": "https://github.com/jayf0x/react-flipcards/issues"
+  },
+  "homepage": "https://jayf0x.github.io/react-flipcards/",
   "packageManager": "bun@1.3.13",
   "sideEffects": [
     "**/*.css"
@@ -35,9 +38,24 @@
     "typescript",
     "flip-card",
     "flip-clock",
+    "flip-countdown",
+    "countdown",
+    "countdown-timer",
+    "clock",
+    "timer",
     "counter",
+    "ticker",
+    "odometer",
     "scoreboard",
-    "react-component"
+    "split-flap",
+    "departure-board",
+    "flip-numbers",
+    "digit",
+    "animation",
+    "3d",
+    "lightweight",
+    "react-component",
+    "ui"
   ],
   "scripts": {
     "dev": "vite build --watch",
