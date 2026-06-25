@@ -1,0 +1,116 @@
+.demo-root {
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  padding: 32px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  color: var(--demo-fg, #1a1a1a);
+  background: var(--demo-bg, #ffffff);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.demo-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 760px;
+}
+
+.demo-stage h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.demo-stage p {
+  margin: 0;
+  color: var(--demo-muted, #555);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.demo-stage code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  background: var(--demo-code-bg, #f0f0f0);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.demo-btn {
+  appearance: none;
+  border: 1px solid var(--demo-btn-border, #d0d0d0);
+  background: var(--demo-btn-bg, #fff);
+  color: var(--demo-fg, #1a1a1a);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.demo-btn:hover {
+  background: var(--demo-btn-hover, #f3f3f3);
+  border-color: #b5b5b5;
+}
+
+.demo-btn:active {
+  filter: brightness(0.95);
+}
+
+.demo-btn--primary {
+  background: var(--demo-accent, #0f181a);
+  border-color: var(--demo-accent, #0f181a);
+  color: #fff;
+}
+
+.demo-btn--primary:hover {
+  filter: brightness(1.25);
+  background: var(--demo-accent, #0f181a);
+}
+
+.demo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.demo-colon {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--demo-accent, #0f181a);
+}
+
+.demo-banner {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0a7d33;
+  min-height: 22px;
+}
+
+.demo-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--demo-muted, #555);
+}
+
+.demo-field input[type='range'] {
+  width: 220px;
+}

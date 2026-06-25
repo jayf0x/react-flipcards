@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "ladle serve",
-    "build": "ladle build --outDir dist",
-    "build:gh": "ladle build --base /react-flipcards/ --outDir dist",
-    "preview": "ladle preview --outDir dist",
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build -o dist",
+    "build:gh": "STORYBOOK_BASE=/react-flipcards/ storybook build -o dist",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build -o dist",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
@@ -16,11 +17,20 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@ladle/react": "^5.1.1",
+    "@chromatic-com/storybook": "^3",
+    "@storybook/addon-a11y": "^8.6.18",
+    "@storybook/addon-essentials": "8.6.18",
+    "@storybook/addon-interactions": "8.6.18",
+    "@storybook/blocks": "8.6.18",
+    "@storybook/react": "8.6.18",
+    "@storybook/react-vite": "8.6.18",
+    "@storybook/test": "8.6.18",
     "@testing-library/react": "^16.1.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "jsdom": "^25.0.1",
+    "storybook": "8.6.18",
+    "storybook-dark-mode": "^4",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   },

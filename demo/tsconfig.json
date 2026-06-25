@@ -16,5 +16,5 @@
     "baseUrl": ".",
     "paths": { "react-flip-cards": ["../src/index.ts"] }
   },
-  "include": ["src", ".ladle", "smoke.test.tsx", "vite.config.ts"]
+  "include": ["src", ".storybook", "smoke.test.tsx", "vite.config.ts"]
 }
