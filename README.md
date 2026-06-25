@@ -4,9 +4,10 @@
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+<!--
 <div align="center">
-  <img src="./resources/demo.gif" alt="react flip cards demo" width="500" />
-</div>
+  <img src="./assets/preview.gif" alt="react flip cards demo" width="500" />
+</div> -->
 
 This is **not** a countdown component. It renders a row of flip cards and lets
 **you** own the values — drive them from a score, a timer, a data feed, anything.
