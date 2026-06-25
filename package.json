@@ -67,7 +67,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "prepare": "husky",
     "prepublishOnly": "bun run build",
-    "npm:deploy": "bash ./scripts/publish-npm.sh"
+    "npm:deploy": "bash ./scripts/deploy-npm.sh",
+    "demo:deploy": "bash ./scripts/deploy-demo.sh"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix",

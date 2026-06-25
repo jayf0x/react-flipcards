@@ -2,7 +2,7 @@ name: Deploy Demo
 
 on:
   # Deploy the demo only when a release tag is pushed (same trigger as npm publish),
-  # plus a manual button (used by scripts/release-demo.sh).
+  # plus a manual button (used by scripts/deploy-demo.sh).
   push:
     tags: ['v*']
   workflow_dispatch:
