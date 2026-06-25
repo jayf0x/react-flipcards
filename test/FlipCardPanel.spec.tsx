@@ -1,7 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
 import React from 'react';
-import FlipCardPanel from './FlipCardPanel';
-import { FlipCardRef } from './types';
+import FlipCardPanel from '../src/FlipCardPanel';
+import { FlipCardRef } from '../src/types';
 
 test('renders the requested number of cards', () => {
   render(<FlipCardPanel nrCards={3} showLabels={false} />);

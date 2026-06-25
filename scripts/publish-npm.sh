@@ -48,22 +48,20 @@ bun run build
 bun run typecheck
 bun run test
 
-# ── refresh real-world stats (local only) ────────────────────────────────────
-( cd tests && bun install && node e2e.js --write )
 bun run format
 
-# ── update changelog.md via Claude Code CLI ───────────────────────────────────
+# ── update CHANGELOG.md via Claude Code CLI ───────────────────────────────────
 # PREV_TAG is the latest existing tag — the new $TAG isn't created until below.
 PREV_TAG=$(git tag --sort=-version:refname | grep "^v" | head -1)
 COMMIT_LOG=$(git log --oneline "$PREV_TAG"..HEAD 2>/dev/null || git log --oneline | head -20)
 
 echo ""
-echo "Updating changelog.md (Claude Code)..."
+echo "Updating CHANGELOG.md (Claude Code)..."
 
 claude \
   --model haiku \
   --no-session-persistence \
-  -p "Update changelog.md for a new NPM release of compress-shader-literals.
+  -p "Update CHANGELOG.md for a new NPM release of react-flip-cards.
 
 New version: $NEW
 Previous tag: $PREV_TAG
@@ -72,7 +70,7 @@ Commits since $PREV_TAG:
 $COMMIT_LOG
 
 Instructions:
-- Read changelog.md first
+- Read CHANGELOG.md first
 - Add a new '## v$NEW' section at the very top (directly below the '# Changelog' heading)
 - Only include meaningful changes: features, bug fixes, breaking changes, perf improvements
 - Skip any commit that is only: chore, deploy, dist, demo, docs, README, backlog, format, prettier, gif, preview, CI internals
@@ -84,7 +82,7 @@ Instructions:
 bun run format
 
 # ── commit + tag + push (GHA workflow handles npm publish) ────────────────────
-git add package.json bun.lock README.md changelog.md tests/bun.lock
+git add package.json bun.lock README.md CHANGELOG.md
 git commit -m "chore: release $NEW"
 git tag "$TAG"
 git push origin HEAD
@@ -92,4 +90,4 @@ git push origin "$TAG"
 
 echo ""
 echo "✓ Tagged $TAG — GitHub Actions will publish to npm"
-echo "  https://github.com/jayF0x/compress-shader-literals/actions"
+echo "  https://github.com/jayf0x/react-flipcards/actions"
