@@ -9,7 +9,7 @@ const libSource = fileURLToPath(new URL('../src/index.ts', import.meta.url));
 export default defineConfig({
   resolve: {
     alias: { 'react-flip-cards': libSource },
-    dedupe: ['react', 'react-dom']
+    dedupe: ['react', 'react-dom', 'clsx']
   },
   esbuild: { jsx: 'automatic' },
   test: {
