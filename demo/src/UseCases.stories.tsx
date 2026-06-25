@@ -31,7 +31,7 @@ export const LiveClock: Story = {
     }, []);
 
     return (
-      <Stage title='Live clock' hint='A wall clock — push the current time every second via set().'>
+      <Stage title='Live clock' hint='A wall clock — push the current time every second via set(). Full source below ↓'>
         <div className='demo-row'>
           <FlipCardPanel ref={h} nrCards={2} blockStyle={cell} />
           <span className='demo-colon'>:</span>
@@ -41,6 +41,47 @@ export const LiveClock: Story = {
         </div>
       </Stage>
     );
+  },
+  parameters: {
+    docs: {
+      source: {
+        language: 'tsx',
+        // Self-contained, copy-paste-ready version of this story.
+        code: `import { useEffect, useRef } from 'react';
+import FlipCardPanel, { type FlipCardRef } from 'react-flip-cards';
+
+const pad = (n: number) => String(n).padStart(2, '0').split('').map(Number);
+
+export function Clock() {
+  const h = useRef<FlipCardRef>(null);
+  const m = useRef<FlipCardRef>(null);
+  const s = useRef<FlipCardRef>(null);
+
+  useEffect(() => {
+    const tick = () => {
+      const d = new Date();
+      h.current?.set(pad(d.getHours()));
+      m.current?.set(pad(d.getMinutes()));
+      s.current?.set(pad(d.getSeconds()));
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const cell = { width: 56, height: 76, fontSize: 44 };
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <FlipCardPanel ref={h} nrCards={2} blockStyle={cell} />
+      <span>:</span>
+      <FlipCardPanel ref={m} nrCards={2} blockStyle={cell} />
+      <span>:</span>
+      <FlipCardPanel ref={s} nrCards={2} blockStyle={cell} />
+    </div>
+  );
+}`
+      }
+    }
   }
 };
 
@@ -77,7 +118,10 @@ export const PingPongScoreboard: Story = {
       <Stage title='Ping-pong scoreboard' hint='First to 11, win by 2. Click a player to award a point.'>
         <div className='demo-row'>
           <FlipCardPanel ref={left} nrCards={2} labels={[names[0]]} blockStyle={cell} />
-          <span className='demo-colon'>:</span>
+          {/* Anchor the colon to the digit block; the labels add height below it. */}
+          <span className='demo-colon' style={{ alignSelf: 'flex-start', lineHeight: `${cell.height}px` }}>
+            :
+          </span>
           <FlipCardPanel ref={right} nrCards={2} labels={[names[1]]} blockStyle={cell} />
         </div>
         <div className='demo-banner'>{win !== null ? `🏆 ${names[win]} wins!` : ''}</div>
@@ -164,41 +208,9 @@ export const Countdown: Story = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Live data ticker — a metric that drifts each tick (e.g. a price).   */
-/* ------------------------------------------------------------------ */
-export const DataTicker: Story = {
-  render: () => {
-    const ref = useRef<FlipCardRef>(null);
-    const price = useRef(1280);
-
-    useEffect(() => {
-      const update = () => {
-        price.current = Math.min(9999, Math.max(0, price.current + Math.round((Math.random() - 0.5) * 60)));
-        ref.current?.set(toDigits(price.current, 4));
-      };
-      update();
-      const id = setInterval(update, 1400);
-      return () => clearInterval(id);
-    }, []);
-
-    return (
-      <Stage title='Data ticker' hint='Pipe any live number — a price, a metric, a vote count — straight into set().'>
-        <FlipCardPanel
-          ref={ref}
-          nrCards={4}
-          labels={['$', '', '', '']}
-          blockStyle={{ ...cell, background: '#0a7d33', color: '#fff', borderRadius: 8 }}
-          dividerStyle={{ color: '#ffffff33' }}
-        />
-      </Stage>
-    );
-  }
-};
-
-/* ------------------------------------------------------------------ */
 /* Combination lock — increment each wheel, unlock on the secret code. */
 /* ------------------------------------------------------------------ */
-const CODE = [4, 2, 0] as const;
+const CODE = [0, 4, 2] as const;
 
 export const CombinationLock: Story = {
   render: () => {

@@ -30,6 +30,8 @@ const themes = {
 } as const;
 
 const preview: Preview = {
+  // Generate a Docs page (with a "Show code" source block) for every story.
+  tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
     controls: {

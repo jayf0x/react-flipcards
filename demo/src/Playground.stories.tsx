@@ -21,6 +21,7 @@ type Args = {
   fontSize: number;
   digitColor: string;
   background: string;
+  separatorColor: string;
   borderRadius: number;
 };
 
@@ -39,6 +40,7 @@ const meta: Meta<Args> = {
     fontSize: { control: { type: 'range', min: 20, max: 100, step: 2 } },
     digitColor: { control: 'color' },
     background: { control: 'color' },
+    separatorColor: { control: 'color', description: 'Colon color (when separators shown)' },
     borderRadius: { control: { type: 'range', min: 0, max: 40, step: 1 } }
   },
   args: {
@@ -54,6 +56,7 @@ const meta: Meta<Args> = {
     fontSize: 52,
     digitColor: '#ffffff',
     background: '#0f181a',
+    separatorColor: '#0f181a',
     borderRadius: 10
   }
 };
@@ -88,7 +91,7 @@ export const Configurable: Story = {
           showDivider={args.showDivider}
           showSeparators={args.showSeparators}
           showLabels={args.showLabels}
-          separatorStyle={{ color: args.digitColor }}
+          separatorStyle={{ color: args.separatorColor }}
           labels={args.showLabels ? Array.from({ length: args.nrCards }, (_, i) => `#${i + 1}`) : undefined}
           blockStyle={{
             width: args.width,
