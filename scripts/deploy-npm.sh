@@ -52,7 +52,7 @@ bun run format
 
 # ── update CHANGELOG.md via Claude Code CLI ───────────────────────────────────
 # PREV_TAG is the latest existing tag — the new $TAG isn't created until below.
-PREV_TAG=$(git tag --sort=-version:refname | grep "^v" | head -1)
+PREV_TAG=$(git tag --sort=-version:refname | grep "^v" | head -1 || true)
 COMMIT_LOG=$(git log --oneline "$PREV_TAG"..HEAD 2>/dev/null || git log --oneline | head -20)
 
 echo ""
