@@ -146,6 +146,12 @@ Everything is a CSS custom property (prefixed `--fcp-`). Override globally in yo
 }
 ```
 
+## Origin story
+
+I was looking for flip cards and found [`@leenguyen/react-flip-clock-countdown`](https://github.com/sLeeNguyen/react-flip-clock-countdown) — great component, but I needed something more customizable that I could drive with arbitrary values. A couple of Claude prompts later, this is the result, and I figured I'd share it.
+
+Full credit to [sLeeNguyen](https://github.com/sLeeNguyen) for the original flip-clock animation that inspired this. **If you just want a drop-in countdown clock, go use the original** — it's purpose-built for that. Reach for react-flip-cards when you want to own the values and bend the cards to any use case.
+
 ## License
 
 [MIT](./LICENSE) © [jayf0x](https://github.com/jayf0x)
