@@ -26,11 +26,13 @@ const FlipCardPanel = React.forwardRef<FlipCardRef, FlipCardPanelProps>(function
     blockStyle,
     labelStyle,
     showSeparators = false,
+    separators,
     separatorStyle,
     showDivider = true,
     dividerStyle,
     duration = 0.7,
     spacing,
+    onChange,
     className,
     style,
     ...other
@@ -45,6 +47,18 @@ const FlipCardPanel = React.forwardRef<FlipCardRef, FlipCardPanelProps>(function
   // Re-seed if the number of cards changes.
   React.useEffect(() => setValues(seed), [seed]);
 
+  // Notify the parent when values change — never on the initial mount. Compare
+  // by reference (state always produces a new array on change) so a re-run of
+  // this effect with unchanged values (e.g. StrictMode) stays silent.
+  const onChangeRef = React.useRef(onChange);
+  onChangeRef.current = onChange;
+  const notified = React.useRef(values);
+  React.useEffect(() => {
+    if (values === notified.current) return;
+    notified.current = values;
+    onChangeRef.current?.(values);
+  }, [values]);
+
   // Imperative API — lets consumers update cards without re-rendering the parent.
   // valuesRef keeps getValue() reading the latest values without rebuilding the handle.
   const valuesRef = React.useRef(values);
@@ -52,13 +66,28 @@ const FlipCardPanel = React.forwardRef<FlipCardRef, FlipCardPanelProps>(function
   React.useImperativeHandle(
     ref,
     () => ({
-      set: (vals) => setValues((prev) => prev.map((v, i) => (vals[i] !== undefined ? vals[i] : v))),
+      // set(values[]) sets every card; set(index, value) sets a single card.
+      set: (a: number[] | number, b?: number) =>
+        setValues((prev) =>
+          Array.isArray(a)
+            ? prev.map((v, i) => (a[i] !== undefined ? a[i] : v))
+            : prev.map((v, i) => (i === a ? (b as number) : v))
+        ),
       increment: (index) => setValues((prev) => prev.map((v, i) => (i === index ? (v + 1) % 10 : v))),
       reset: () => setValues((prev) => prev.map(() => 0)),
       getValue: () => valuesRef.current
     }),
     []
   );
+
+  // Card indices that get a trailing colon. Explicit `separators` wins;
+  // otherwise `showSeparators` puts one between every pair.
+  const sepIndices = React.useMemo(() => {
+    if (separators) return new Set(separators);
+    if (showSeparators) return new Set(Array.from({ length: nrCards - 1 }, (_, i) => i));
+    return new Set<number>();
+  }, [separators, showSeparators, nrCards]);
+  const hasSeparators = sepIndices.size > 0;
 
   const containerStyles = React.useMemo<React.CSSProperties>(
     () => ({
@@ -76,10 +105,10 @@ const FlipCardPanel = React.forwardRef<FlipCardRef, FlipCardPanelProps>(function
       '--fcp-divider-color': showDivider ? dividerStyle?.color : 'transparent',
       '--fcp-divider-height': showDivider ? convertToPx(dividerStyle?.height) : '0px',
       '--fcp-separator-size': convertToPx(separatorStyle?.size),
-      '--fcp-separator-color': showSeparators ? separatorStyle?.color : 'transparent',
+      '--fcp-separator-color': hasSeparators ? separatorStyle?.color : 'transparent',
       ...style
     }),
-    [style, blockStyle, labelStyle, duration, dividerStyle, separatorStyle, showSeparators, showDivider, spacing]
+    [style, blockStyle, labelStyle, duration, dividerStyle, separatorStyle, hasSeparators, showDivider, spacing]
   );
 
   // Style props that map to CSS variables are stripped so they don't double-apply inline.
@@ -115,7 +144,7 @@ const FlipCardPanel = React.forwardRef<FlipCardRef, FlipCardPanelProps>(function
             )}
             <FlipCard value={value} style={cardStyle} />
           </div>
-          {showSeparators && i < values.length - 1 && <div className={clsx('fcp__separator', styles.fcp__colon)}></div>}
+          {sepIndices.has(i) && <div className={clsx('fcp__separator', styles.fcp__colon)}></div>}
         </React.Fragment>
       ))}
     </div>

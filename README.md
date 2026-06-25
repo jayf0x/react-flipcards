@@ -27,7 +27,7 @@ Import the component and its stylesheet:
 
 ```tsx
 import FlipCardPanel, { FlipCardRef } from 'react-flip-cards';
-import 'react-flip-cards/dist/index.css';
+import 'react-flip-cards/styles.css';
 ```
 
 ## Usage

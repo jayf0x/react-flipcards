@@ -97,4 +97,30 @@ describe('imperative ref API', () => {
     act(() => ref.current?.set([5]));
     expect(ref.current?.getValue()).toEqual([5, 1, 1]);
   });
+
+  test('set(index, value) updates a single card', () => {
+    const ref = React.createRef<FlipCardRef>();
+    render(<FlipCardPanel ref={ref} nrCards={3} initialValue={[1, 1, 1]} showLabels={false} />);
+    act(() => ref.current?.set(1, 7));
+    expect(ref.current?.getValue()).toEqual([1, 7, 1]);
+  });
+});
+
+test('onChange fires on change but not on mount', () => {
+  const ref = React.createRef<FlipCardRef>();
+  const onChange = vi.fn();
+  render(<FlipCardPanel ref={ref} nrCards={2} onChange={onChange} showLabels={false} />);
+  expect(onChange).not.toHaveBeenCalled();
+
+  act(() => ref.current?.set([3, 4]));
+  expect(onChange).toHaveBeenLastCalledWith([3, 4]);
+
+  act(() => ref.current?.increment(0));
+  expect(onChange).toHaveBeenLastCalledWith([4, 4]);
+});
+
+test('separators renders colons only at the given indices', () => {
+  // 6 cards with colons after 1 and 3 -> 6 cards + 2 colons.
+  render(<FlipCardPanel nrCards={6} separators={[1, 3]} showLabels={false} />);
+  expect(screen.getByTestId('fcp-container').children.length).toBe(6 + 2);
 });

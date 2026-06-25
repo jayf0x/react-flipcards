@@ -13,6 +13,8 @@ export type FlipCardLabel = string | React.ReactElement;
 export interface FlipCardRef {
   /** Set every card's value at once, animating any that changed. */
   set(values: number[]): void;
+  /** Set a single card at `index` to `value`, e.g. `set(1, 7)`. */
+  set(index: number, value: number): void;
   /** Increment a single card at `index` (wraps 9 → 0). */
   increment(index: number): void;
   /** Reset all cards back to 0. */
@@ -23,7 +25,7 @@ export interface FlipCardRef {
 
 export interface FlipCardPanelProps extends Omit<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
-  'children'
+  'children' | 'onChange'
 > {
   /** Number of flip cards to render. */
   readonly nrCards: number;
@@ -44,10 +46,16 @@ export interface FlipCardPanelProps extends Omit<
   /** Styles applied to the labels (font-size, color, ...). */
   readonly labelStyle?: React.CSSProperties;
   /**
-   * Show colon separators between cards.
+   * Show colon separators between every card.
    * @default false
    */
   readonly showSeparators?: boolean;
+  /**
+   * Show colons only after the given card indices — e.g. `[1, 3]` renders
+   * `HH:MM:SS` from a single 6-card panel. Takes precedence over
+   * `showSeparators` when set.
+   */
+  readonly separators?: readonly number[];
   /** Separator (colon) styling. */
   readonly separatorStyle?: {
     color?: React.CSSProperties['color'];
@@ -70,4 +78,9 @@ export interface FlipCardPanelProps extends Omit<
   readonly duration?: number;
   /** Spacing between cards / separators. */
   readonly spacing?: number | string;
+  /**
+   * Called with the new values whenever the displayed cards change (via the
+   * ref API). Lets a parent track state without mirroring it by hand.
+   */
+  readonly onChange?: (values: number[]) => void;
 }
