@@ -68,7 +68,8 @@
     "prepare": "husky",
     "prepublishOnly": "bun run build",
     "npm:deploy": "bash ./scripts/deploy-npm.sh",
-    "demo:deploy": "bash ./scripts/deploy-demo.sh"
+    "demo:deploy": "bash ./scripts/deploy-demo.sh",
+    "size": "size-limit"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix",
@@ -100,6 +101,21 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.7",
-    "vitest": "^2.1.8"
-  }
+    "vitest": "^2.1.8",
+    "size-limit": "^11.0.0",
+    "@size-limit/file": "^11.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "2.5 kB"
+    },
+    {
+      "path": "dist/index.css",
+      "limit": "1.2 kB"
+    }
+  ]
 }
