@@ -1,6 +1,6 @@
 {
   "name": "react-flip-cards",
-  "version": "1.0.0",
+  "version": "0.0.-1",
   "description": "A generic, ref-driven 3D animated flip-card panel for React.",
   "author": "leenguyen",
   "license": "MIT",
@@ -48,7 +48,8 @@
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "prepare": "husky",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build",
+    "npm:deploy": "bash ./scripts/publish-npm.sh"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix",
