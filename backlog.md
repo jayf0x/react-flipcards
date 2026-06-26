@@ -18,64 +18,7 @@ genuinely doesn't apply, and say why):
 
 ---
 
-## ~~1. `spin` flip mode — odometer roll, fixed total time~~ ✅ Done
-
-> **Shipped.** `mode='spin'` renders via `src/OdometerCard.tsx` — a vertical 0–9
-> strip (doubled for forward wrap) scrolled by one `translateY`/`ease-out`
-> transition, chase-latest like the flip engine. The whole feature (`sync` +
-> `queue` + `spin`) is now complete. Design notes kept below for reference.
-
-### Where `spin` fits
-
-Two orthogonal axes describe a roll: _what plays_ (latest value only vs. every
-step in between) and _how time is budgeted_ (fixed **per step** → constant
-speed, total grows with distance; or fixed **total** → speed grows with
-distance, always lands in ~N).
-
-|                 | fixed per-step | fixed total            |
-| --------------- | -------------- | ---------------------- |
-| **latest only** | `sync` ✅      | — (1 step, moot)       |
-| **every step**  | `queue` ✅     | **`spin`** ← this item |
-
-`queue` is fixed-per-step, so it inherently **falls behind** when the target is
-far or moving fast — that lag is by design, not a bug. `spin` is the answer: it
-compresses the whole roll into ~one duration, so it always lands on time.
-
-### Why it can't reuse the flip renderer
-
-`spin` (e.g. 0.1s for a 10-digit roll) does **not** work as N tiny 3D flips —
-jank, and `transitionEnd` is unreliable that fast. The chase-latest loop that
-drives `sync`/`queue` assumes one settle per step; `spin` has no per-step
-settle.
-
-It wants a **different renderer**: an **odometer strip** — the digits `0–9`
-stacked vertically, moved with a single `translateY` transition and an
-`ease-out` curve. One transition covers any distance in any duration (the "pure
-CSS with a curve" effect), but it _scrolls_ instead of _flips_. Treat `spin` as
-its own visual primitive, not a flag bolted onto the flip.
-
-### Sketch
-
-- A separate component (e.g. `OdometerCard`) selected when `mode === 'spin'`;
-  the flip renderer stays untouched for `sync`/`queue`.
-- Strip of `0–9` (likely doubled to `0–9 0–9` so wrap-around 9→0 scrolls forward
-  instead of snapping back). `translateY(-value * digitHeight)` with
-  `transition: transform var(--fcp-flip-duration) ease-out`.
-- Still **chase-latest**: store `displayed` + `target`, set `translateY` to the
-  latest target; a changing target just retargets the same transition. No FIFO.
-- Numeric-only, like `queue` (no "step" for non-numeric content — see feature 2).
-
-### Decisions to keep
-
-- **Default stays `sync`.** Clocks depend on it.
-- **No `smart` mode.** It existed to stop `queue` falling behind via a discard
-  heuristic; `spin` solves that properly (whole roll compressed to ~N). If
-  constant-speed `queue` ever needs a cap, add a numeric `maxQueue?: number`, not
-  a black-box mode.
-
----
-
-## 2. Custom card content (non-numeric)
+## ITEM: Custom card content (non-numeric)
 
 Let a card display arbitrary content instead of `0–9`, e.g. weekdays
 `["Mo", "Tue", …, "Su"]`, months, or `["▲", "▼"]`. The component stays
