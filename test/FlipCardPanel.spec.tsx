@@ -170,6 +170,42 @@ test('sync survives rapid updates without getting stuck', () => {
   expect(ref.current?.getValue()).toEqual([5]);
 });
 
+// The odometer block's only child is the scrolling strip; read its translateY
+// cell from the inline transform. CSS-module classes are hashed, so we reach it
+// via the stable global `fcp__card_block` class.
+function odometerStrip(): HTMLElement {
+  return (screen.getByTestId('fcp-container').querySelector('.fcp__card_block') as HTMLElement)
+    .children[0] as HTMLElement;
+}
+const stripCell = (strip: HTMLElement) => /\* (-?\d+)\)/.exec(strip.style.transform)?.[1];
+
+test('spin mode scrolls the odometer straight to the target in one transition', () => {
+  const ref = React.createRef<FlipCardRef>();
+  render(<FlipCardPanel ref={ref} nrCards={1} mode='spin' showLabels={false} />);
+  const strip = odometerStrip();
+
+  expect(stripCell(strip)).toBe('0');
+  act(() => ref.current?.set([7]));
+  expect(stripCell(strip)).toBe('-7'); // one transition covers the whole 0 -> 7 distance
+  act(() => {
+    fireEvent.transitionEnd(strip);
+  });
+  expect(stripCell(strip)).toBe('-7');
+});
+
+test('spin wraps forward through the doubled strip (8 -> 1)', () => {
+  const ref = React.createRef<FlipCardRef>();
+  render(<FlipCardPanel ref={ref} nrCards={1} initialValue={[8]} mode='spin' showLabels={false} />);
+  const strip = odometerStrip();
+
+  act(() => ref.current?.set([1]));
+  expect(stripCell(strip)).toBe('-11'); // 8 -> 9 -> 0 -> 1 scrolls forward into the 2nd copy
+  act(() => {
+    fireEvent.transitionEnd(strip);
+  });
+  expect(stripCell(strip)).toBe('-1'); // snaps back into the first copy, same digit shown
+});
+
 test('separators renders colons only at the given indices', () => {
   // 6 cards with colons after 1 and 3 -> 6 cards + 2 colons.
   render(<FlipCardPanel nrCards={6} separators={[1, 3]} showLabels={false} />);

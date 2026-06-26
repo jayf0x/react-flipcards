@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 import FlipCard from './FlipCard';
+import OdometerCard from './OdometerCard';
 import styles from './styles.module.css';
 import { FlipCardPanelProps, FlipCardRef } from './types';
 import { convertToPx } from './utils';
@@ -143,7 +144,11 @@ const FlipCardPanel = React.forwardRef<FlipCardRef, FlipCardPanelProps>(function
                 {labels[i]}
               </div>
             )}
-            <FlipCard value={value} mode={mode} style={cardStyle} />
+            {mode === 'spin' ? (
+              <OdometerCard value={value} style={cardStyle} />
+            ) : (
+              <FlipCard value={value} mode={mode} style={cardStyle} />
+            )}
           </div>
           {sepIndices.has(i) && <div className={clsx('fcp__separator', styles.fcp__colon)}></div>}
         </React.Fragment>

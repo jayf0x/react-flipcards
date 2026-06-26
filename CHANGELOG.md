@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `mode='spin'`: an odometer renderer (`src/OdometerCard.tsx`) that scrolls a
+  vertical digit strip straight to the latest value in one `duration`, so a far
+  jump still lands on time (unlike `queue`). Numeric cards only. Exposed as
+  `OdometerCard` too.
 - Add `mode` prop with `sync` (default) and `queue`. `sync` is now a chase-latest
   loop: each flip completes and re-checks the latest value, so rapid updates are
   never dropped. `queue` rolls through every intermediate digit toward the latest

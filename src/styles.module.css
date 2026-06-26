@@ -133,6 +133,41 @@
   border-bottom-right-radius: inherit;
 }
 
+/* Odometer renderer (mode='spin') — a vertical digit strip scrolled by one
+   transform transition. Reuses .fcp__digit_block for sizing/shadow/radius/font. */
+.fcp__odometer {
+  overflow: hidden;
+  background: var(--fcp-background);
+}
+
+/* Center divider, matching the flip card's split line. */
+.fcp__odometer::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 1;
+  border-top: var(--fcp-divider-height) solid var(--fcp-divider-color);
+}
+
+.fcp__odometer_strip {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.fcp__odometer_strip.fcp__spinning {
+  transition: transform var(--fcp-flip-duration) ease-out;
+}
+
+.fcp__odometer_digit {
+  height: var(--fcp-digit-block-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .fcp__colon {
   height: var(--fcp-digit-block-height);
   display: flex;

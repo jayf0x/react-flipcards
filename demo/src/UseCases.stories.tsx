@@ -210,6 +210,46 @@ export const Countdown: Story = {
 };
 
 /* ------------------------------------------------------------------ */
+/* Slot machine — mode='spin' scrolls the odometer straight to any value in */
+/* one duration, so a big random jump still lands on time (unlike queue).    */
+/* ------------------------------------------------------------------ */
+export const SlotMachine: Story = {
+  render: () => {
+    const ref = useRef<FlipCardRef>(null);
+
+    const spin = () => ref.current?.set(Array.from({ length: 3 }, () => Math.floor(Math.random() * 10)));
+
+    return (
+      <Stage
+        title='Slot machine'
+        hint="mode='spin' scrolls an odometer strip to the target in one duration — distance just makes it faster."
+      >
+        <FlipCardPanel
+          ref={ref}
+          nrCards={3}
+          mode='spin'
+          spacing={6}
+          duration={1}
+          blockStyle={{
+            ...cell,
+            background: 'linear-gradient(160deg,#f59e0b,#b45309)',
+            color: '#fff',
+            borderRadius: 8
+          }}
+          dividerStyle={{ color: '#ffffff33' }}
+        />
+        <div className='demo-controls'>
+          <Button primary onClick={spin}>
+            Spin
+          </Button>
+          <Button onClick={() => ref.current?.reset()}>Reset</Button>
+        </div>
+      </Stage>
+    );
+  }
+};
+
+/* ------------------------------------------------------------------ */
 /* Rolling counter — mode='queue' rolls through every digit toward the */
 /* latest value, even when you jump several steps at once.             */
 /* ------------------------------------------------------------------ */

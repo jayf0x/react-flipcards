@@ -18,11 +18,12 @@ genuinely doesn't apply, and say why):
 
 ---
 
-## 1. `spin` flip mode — odometer roll, fixed total time
+## ~~1. `spin` flip mode — odometer roll, fixed total time~~ ✅ Done
 
-> **Done already (not part of this item):** `mode='sync'` (default, no-drop) and
-> `mode='queue'` shipped — the chase-latest loop in `src/FlipCard.tsx` + the
-> `mode` prop. This item is only the remaining **`spin`** mode.
+> **Shipped.** `mode='spin'` renders via `src/OdometerCard.tsx` — a vertical 0–9
+> strip (doubled for forward wrap) scrolled by one `translateY`/`ease-out`
+> transition, chase-latest like the flip engine. The whole feature (`sync` +
+> `queue` + `spin`) is now complete. Design notes kept below for reference.
 
 ### Where `spin` fits
 
