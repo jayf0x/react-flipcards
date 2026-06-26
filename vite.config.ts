@@ -5,13 +5,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   plugins: [react()],
   build: {
-    minify: 'terser', // Default, but explicit
-    terserOptions: {
-      compress: {
-        drop_console: true // Example: remove console logs
-      },
-      mangle: true
-    },
+    minify: 'oxc',
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'ReactFlipCards',
