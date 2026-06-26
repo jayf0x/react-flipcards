@@ -1,6 +1,6 @@
 # react-flip-cards
 
-> **The flip-clock primitive for React.** One tiny, ref-driven component — build clocks, countdowns, counters, tickers and scoreboards from the exact same building block.
+> Flip cards for React — a little toy for when you need digits that flip, roll, or spin.
 
 [![npm version](https://img.shields.io/npm/v/react-flip-cards.svg?color=0a7d33)](https://www.npmjs.com/package/react-flip-cards)
 [![npm downloads](https://img.shields.io/npm/dm/react-flip-cards.svg)](https://www.npmjs.com/package/react-flip-cards)
@@ -10,37 +10,24 @@
 
 ![Preview](./assets/preview.gif)
 
-**Ultra-lightweight (~2&nbsp;kB gzipped). Hyper-flexible. Zero config. It just works.**
-
-react-flip-cards renders a row of buttery-smooth 3D flip cards and gets out of your way. It doesn't decide _what_ the numbers mean — **you** own the values and push them from a clock, a timer, a score, a websocket, anything. Drive them declaratively with props or imperatively through a `ref`.
-
 ### **[▶ Live demo & copy-paste examples →](https://jayf0x.github.io/react-flipcards/)**
 
----
+## The story
 
-## Why react-flip-cards?
+I wanted flip cards and found [`@leenguyen/react-flip-clock-countdown`](https://github.com/sLeeNguyen/react-flip-clock-countdown) — a great component, but I needed something more flexible.
 
-- ⚡ **Tiny** — ~2&nbsp;kB gzipped, one small dependency. No moment.js, no bloat.
-- 🧩 **One primitive, infinite use cases** — clock, countdown, scoreboard, odometer, split-flap board… all the same component.
-- 🎛️ **You own the data** — no opinionated "countdown" lock-in. Push any numbers, any time.
-- 🪄 **Imperative `ref` API** — update cards without re-rendering the parent.
-- 🎨 **Themeable to the pixel** — every token is a CSS variable; style per-instance or globally.
-- 🟦 **TypeScript-first** — full types shipped, no `@types` package needed.
-- ⚛️ **React 16.13 → 19** — works everywhere, SSR-friendly.
+This is the light unopinionated version, perfect for any type of digit animation.
 
 ## Install
 
 ```bash
 npm install react-flip-cards
-# or: bun add react-flip-cards / pnpm add react-flip-cards / yarn add react-flip-cards
+# or: bun add / pnpm add / yarn add react-flip-cards
 ```
 
-```tsx
-import FlipCardPanel, { FlipCardRef } from 'react-flip-cards';
-import 'react-flip-cards/styles.css';
-```
+## Usage
 
-## Quick start — a live clock in 12 lines
+You own the values. Render a panel and push numbers into it — declaratively via props, or imperatively through a `ref`:
 
 ```tsx
 import { useEffect, useRef } from 'react';
@@ -66,41 +53,7 @@ export function Clock() {
 }
 ```
 
-## Recipes
-
-<details open>
-<summary><b>Scoreboard</b> — multi-digit score, set a single card with <code>set(index, value)</code></summary>
-
-```tsx
-const ref = useRef<FlipCardRef>(null);
-<FlipCardPanel ref={ref} nrCards={2} labels={['Cap']} />;
-ref.current?.set(0, 1); // tens place
-ref.current?.set(1, 7); // ones place  → "17"
-```
-
-</details>
-
-<details>
-<summary><b>Countdown</b> — drive an <code>MM:SS</code> display yourself</summary>
-
-```tsx
-const ref = useRef<FlipCardRef>(null);
-<FlipCardPanel ref={ref} nrCards={4} separators={[1]} />;
-ref.current?.set([0, 5, 0, 0]); // 05:00
-```
-
-</details>
-
-<details>
-<summary><b>Static display</b> — set it and forget it</summary>
-
-```tsx
-<FlipCardPanel nrCards={5} initialValue={[1, 2, 3, 4, 5]} />
-```
-
-</details>
-
-> 💡 Every recipe — ping-pong scoreboard, wall clock, countdown, combination lock — is live with copyable source in the **[interactive demo](https://jayf0x.github.io/react-flipcards/)**.
+Scoreboards, countdowns, odometers, combination locks — they're all the same component with different values. See the **[live demo](https://jayf0x.github.io/react-flipcards/)** for those, each with copyable source.
 
 ## Ref API
 
@@ -149,9 +102,13 @@ Everything is a CSS custom property (prefixed `--fcp-`). Override globally in yo
 }
 ```
 
-## Origin story
+## Extending
 
-I was looking for flip cards and found [`@leenguyen/react-flip-clock-countdown`](https://github.com/sLeeNguyen/react-flip-clock-countdown) — great component, but I needed something more customizable that I could drive with arbitrary values. A couple of prompts later, this is the result, and I figured I'd share it.
+It's a small, value-driven primitive, so most "features" are just how you drive it:
+
+- **Animation feel** — pick a `mode` (`sync` / `queue` / `spin`) and `duration`. `FlipCard` (3D flip) and `OdometerCard` (vertical scroll) are both exported if you want to use a single card directly.
+- **Looks** — it's all `--fcp-*` CSS variables; restyle without touching the component.
+- **Behaviour** — there are no internal timers or data fetching by design. You hold the values and `set()` them, so a clock, a counter, or a live feed are all the same three lines.
 
 ## License
 
