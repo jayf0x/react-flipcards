@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.1.2
 
 - Add `mode='spin'`: an odometer renderer (`src/OdometerCard.tsx`) that scrolls a
   vertical digit strip straight to the latest value in one `duration`, so a far
