@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.0
+
+- Internal/infrastructure changes only
+
 ## v0.1.2
 
 - Add `mode='spin'`: an odometer renderer (`src/OdometerCard.tsx`) that scrolls a
