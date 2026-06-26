@@ -18,75 +18,59 @@ genuinely doesn't apply, and say why):
 
 ---
 
-## 1. Flip modes: `sync` (default) + `queue` + `spin`
+## 1. `spin` flip mode — odometer roll, fixed total time
 
-> **Status:** `sync` (no-drop) + `queue` shipped — chase-latest loop in
-> `src/FlipCard.tsx`, `mode` prop on the panel. `spin` deferred: it needs the
-> separate odometer renderer (see "Rendering split" below), kept as its own
-> experiment.
+> **Done already (not part of this item):** `mode='sync'` (default, no-drop) and
+> `mode='queue'` shipped — the chase-latest loop in `src/FlipCard.tsx` + the
+> `mode` prop. This item is only the remaining **`spin`** mode.
 
-### The key fact
+### Where `spin` fits
 
-`FlipCard` today is a **two-face flip**: one 180° rotation from the old value to
-the new one. `5 → 8` is a _single_ flip showing "5" then "8" — it does **not**
-roll through 6, 7. The card only ever has two faces. So "roll through the
-intermediate digits" is not a timing tweak on the current animation; it's a
-different primitive. Keep that front of mind.
+Two orthogonal axes describe a roll: _what plays_ (latest value only vs. every
+step in between) and _how time is budgeted_ (fixed **per step** → constant
+speed, total grows with distance; or fixed **total** → speed grows with
+distance, always lands in ~N).
 
-### Two orthogonal axes
+|                 | fixed per-step | fixed total            |
+| --------------- | -------------- | ---------------------- |
+| **latest only** | `sync` ✅      | — (1 step, moot)       |
+| **every step**  | `queue` ✅     | **`spin`** ← this item |
 
-1. **What plays** — only the latest value, or every step in between.
-2. **How time is budgeted** — fixed _per step_ (constant speed, total grows with
-   distance) or fixed _total_ (compress to fit, speed grows with distance).
+`queue` is fixed-per-step, so it inherently **falls behind** when the target is
+far or moving fast — that lag is by design, not a bug. `spin` is the answer: it
+compresses the whole roll into ~one duration, so it always lands on time.
 
-|                 | fixed per-step                                  | fixed total                                           |
-| --------------- | ----------------------------------------------- | ----------------------------------------------------- |
-| **latest only** | `sync` (today's default)                        | — (1 step, moot)                                      |
-| **every step**  | `queue` — rolls at human speed, can fall behind | `spin` — rolls but lands in ~N, needs an easing curve |
+### Why it can't reuse the flip renderer
 
-### The engine: chase the latest, don't snapshot
+`spin` (e.g. 0.1s for a 10-digit roll) does **not** work as N tiny 3D flips —
+jank, and `transitionEnd` is unreliable that fast. The chase-latest loop that
+drives `sync`/`queue` assumes one settle per step; `spin` has no per-step
+settle.
 
-Do **not** freeze a snapshot/FIFO of pending values — that's the path that gets
-messy when the target changes mid-roll. Store almost nothing per card:
+It wants a **different renderer**: an **odometer strip** — the digits `0–9`
+stacked vertically, moved with a single `translateY` transition and an
+`ease-out` curve. One transition covers any distance in any duration (the "pure
+CSS with a curve" effect), but it _scrolls_ instead of _flips_. Treat `spin` as
+its own visual primitive, not a flag bolted onto the flip.
 
-- `displayed` (current face) + `target` (latest value passed in).
-- On every `transitionEnd`, re-read `target`:
-  - `sync` → flip straight to `target`.
-  - `queue` / `spin` → step one toward `target` (`+1 mod 10`), flip, repeat
-    until `displayed === target`.
+### Sketch
 
-Because each settle re-reads the **latest** target, "if the target changes it
-keeps rolling / flips the other way" is free — there's nothing to reconcile. For
-normal monotonic streams (5,6,7,8) stepping toward the latest passes through
-every value, so you get "animate every change" **without storing them**.
+- A separate component (e.g. `OdometerCard`) selected when `mode === 'spin'`;
+  the flip renderer stays untouched for `sync`/`queue`.
+- Strip of `0–9` (likely doubled to `0–9 0–9` so wrap-around 9→0 scrolls forward
+  instead of snapping back). `translateY(-value * digitHeight)` with
+  `transition: transform var(--fcp-flip-duration) ease-out`.
+- Still **chase-latest**: store `displayed` + `target`, set `translateY` to the
+  latest target; a changing target just retargets the same transition. No FIFO.
+- Numeric-only, like `queue` (no "step" for non-numeric content — see feature 2).
 
-Consequence: rolling is inherently a **numeric digit** feature. A card holding
-`"Mon"` (see feature 2) has no "step toward", so roll modes only apply to 0–9.
-
-### Rendering split (don't fight CSS)
-
-- `sync` and `queue` (human speed, ~0.3–0.7s/step) look right as real 3D flips —
-  reuse the current renderer, just drive it from the chase-latest loop.
-- `spin` (e.g. 0.1s for a 10-digit roll) does **not** work as N tiny 3D flips —
-  jank, and `transitionEnd` is unreliable that fast. It wants a different
-  renderer: an **odometer strip** (digits stacked vertically, one `translateY`
-  transition with an `ease-out` curve). One transition covers any distance in
-  any duration — the "pure CSS with a curve" effect — but it _scrolls_ instead
-  of _flips_. Treat `spin` as its own visual primitive / experiment, not a flag
-  bolted onto the flip.
-
-### Notes / decisions
+### Decisions to keep
 
 - **Default stays `sync`.** Clocks depend on it.
-- **Fix the default first (no-drop):** even before adding modes, make each flip
-  complete and, on `transitionEnd`, flip again if a newer value arrived. That's
-  the chase-latest loop with step = "jump". It kills the existing "fast updates
-  break the magic" glitch with **zero new API or visuals** — and it's the engine
-  the roll modes build on. Highest value, do it first.
-- **No `smart` mode.** It was invented to stop `queue` falling behind via a
-  discard heuristic. `spin` already self-corrects (whole roll compressed to ~N),
-  so it solves that problem properly. If a constant-speed `queue` ever needs a
-  cap, add a numeric `maxQueue?: number`, not a black-box mode.
+- **No `smart` mode.** It existed to stop `queue` falling behind via a discard
+  heuristic; `spin` solves that properly (whole roll compressed to ~N). If
+  constant-speed `queue` ever needs a cap, add a numeric `maxQueue?: number`, not
+  a black-box mode.
 
 ---
 

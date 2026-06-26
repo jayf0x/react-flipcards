@@ -72,6 +72,10 @@ export default meta;
 type Story = StoryObj<Args>;
 
 export const Configurable: Story = {
+  args: {
+    mode: 'queue'
+  },
+
   render: (args) => {
     const ref = useRef<FlipCardRef>(null);
     const roll = () => ref.current?.set(Array.from({ length: args.nrCards }, () => Math.floor(Math.random() * 10)));

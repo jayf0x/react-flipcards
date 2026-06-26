@@ -38,34 +38,46 @@ function stepToward(from: Digit, target: Digit, mode: FlipMode): Digit {
  * it re-reads `value`, so updates are never dropped (`sync`) and a changing
  * target keeps rolling without any queued state (`queue`).
  *
- * Removing the `fcp__flipped` class drops the CSS transition entirely, so the
- * card snaps back to 0° with no animation and no extra `transitionEnd` — that
- * snap is what lets us start the next step cleanly.
+ * Restarting a CSS transition needs the element to be committed at 0° before the
+ * flip class is added — otherwise rapid updates collapse "settle" and "flip"
+ * into one paint, the transition never starts, `transitionEnd` never fires, and
+ * the card gets stuck. We use an `armed` step: render the new faces at 0°, force
+ * a reflow in a layout effect, then add the flip class. That makes the restart
+ * independent of paint timing.
  */
 export default function FlipCard(props: FlipCardProps) {
   const { value, mode = 'sync', className, style } = props;
   const [card, setCard] = React.useState<FlipCardState>({ current: value, next: value });
-  const [flipping, setFlipping] = React.useState(false);
+  // 'idle' settled · 'armed' faces set at 0°, about to flip · 'flipping' mid-flip.
+  const [phase, setPhase] = React.useState<'idle' | 'armed' | 'flipping'>('idle');
+  const cardRef = React.useRef<HTMLDivElement>(null);
   // The value committed to the visible front face. A ref so the start-loop can
   // compare against it without re-running for it.
   const displayed = React.useRef(value);
 
-  // Start a flip whenever we're settled but behind the latest value. Re-reads
-  // `value` on every run (after each step settles flipping→false), so it always
-  // chases the latest target. Skips while a flip is in flight — don't disturb it.
+  // Arm a flip whenever we're settled but behind the latest value. Re-reads
+  // `value` on each run (after each step settles to 'idle'), so it always chases
+  // the latest target.
   React.useEffect(() => {
-    if (flipping || value === displayed.current) return;
-    const next = stepToward(displayed.current, value, mode);
-    setCard({ current: displayed.current, next });
-    setFlipping(true);
-  }, [value, mode, flipping]);
+    if (phase !== 'idle' || value === displayed.current) return;
+    setCard({ current: displayed.current, next: stepToward(displayed.current, value, mode) });
+    setPhase('armed');
+  }, [value, mode, phase]);
+
+  // Once the new faces are committed at 0°, force a reflow so the browser
+  // records that start state, then flip. Layout effect = runs before paint.
+  React.useLayoutEffect(() => {
+    if (phase !== 'armed') return;
+    void cardRef.current?.offsetHeight; // force reflow at 0° so the transition restarts
+    setPhase('flipping');
+  }, [phase]);
 
   const handleTransitionEnd = (): void => {
     // The face we just flipped to is now displayed. Settle to it (both faces
-    // equal) and drop the flip; the start-loop decides whether to step again.
+    // equal) and go idle; the start-loop decides whether to step again.
     displayed.current = card.next;
     setCard({ current: card.next, next: card.next });
-    setFlipping(false);
+    setPhase('idle');
   };
 
   return (
@@ -73,7 +85,8 @@ export default function FlipCard(props: FlipCardProps) {
       <div className={styles.fcp__next_above}>{card.next}</div>
       <div className={styles.fcp__current_below}>{card.current}</div>
       <div
-        className={clsx(styles.fcp__card, { [styles.fcp__flipped]: flipping })}
+        ref={cardRef}
+        className={clsx(styles.fcp__card, { [styles.fcp__flipped]: phase === 'flipping' })}
         onTransitionEnd={handleTransitionEnd}
       >
         <div className={clsx(styles.fcp__card_face, styles.fcp__card_face_front)}>{card.current}</div>

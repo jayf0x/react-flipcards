@@ -152,6 +152,24 @@ test('sync mode jumps straight to the latest value (no-drop)', () => {
   expect(back()).toBe('7'); // straight to target, no intermediate steps
 });
 
+test('sync survives rapid updates without getting stuck', () => {
+  // Regression: a value arriving before the prior flip settled used to strand
+  // the card mid-flip. Now the in-flight flip finishes, then it chases latest.
+  const ref = React.createRef<FlipCardRef>();
+  render(<FlipCardPanel ref={ref} nrCards={1} mode='sync' showLabels={false} />);
+  const fcp = screen.getByTestId('fcp-container');
+  const block = fcp.querySelector('.fcp__card_block') as HTMLElement;
+  const back = () => block.children[0].textContent;
+
+  act(() => ref.current?.set([3]));
+  act(() => ref.current?.set([5])); // arrives before the first flip settled
+  expect(back()).toBe('3'); // still flipping toward 3, update not dropped
+  settleFlip(fcp);
+  expect(back()).toBe('5'); // settles, then chases the latest value
+  settleFlip(fcp);
+  expect(ref.current?.getValue()).toEqual([5]);
+});
+
 test('separators renders colons only at the given indices', () => {
   // 6 cards with colons after 1 and 3 -> 6 cards + 2 colons.
   render(<FlipCardPanel nrCards={6} separators={[1, 3]} showLabels={false} />);
