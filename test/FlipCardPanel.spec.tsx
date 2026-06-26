@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import FlipCardPanel from '../src/FlipCardPanel';
 import { FlipCardRef } from '../src/types';
@@ -117,6 +117,39 @@ test('onChange fires on change but not on mount', () => {
 
   act(() => ref.current?.increment(0));
   expect(onChange).toHaveBeenLastCalledWith([4, 4]);
+});
+
+// The card div carries the onTransitionEnd handler; settle a flip by firing it.
+// jsdom never fires transitionEnd on its own, so each call advances one step.
+function settleFlip(container: HTMLElement) {
+  const card = container.querySelector('.fcp__card_block')?.children[2];
+  act(() => {
+    fireEvent.transitionEnd(card as Element);
+  });
+}
+
+test('queue mode rolls through every intermediate digit', () => {
+  const ref = React.createRef<FlipCardRef>();
+  render(<FlipCardPanel ref={ref} nrCards={1} mode='queue' showLabels={false} />);
+  const block = screen.getByTestId('fcp-container').querySelector('.fcp__card_block') as HTMLElement;
+  const back = () => block.children[0].textContent; // fcp__next_above shows the face being flipped in
+
+  act(() => ref.current?.set([3]));
+  expect(back()).toBe('1'); // 0 -> 1, not straight to 3
+  settleFlip(screen.getByTestId('fcp-container'));
+  expect(back()).toBe('2');
+  settleFlip(screen.getByTestId('fcp-container'));
+  expect(back()).toBe('3');
+});
+
+test('sync mode jumps straight to the latest value (no-drop)', () => {
+  const ref = React.createRef<FlipCardRef>();
+  render(<FlipCardPanel ref={ref} nrCards={1} mode='sync' showLabels={false} />);
+  const block = screen.getByTestId('fcp-container').querySelector('.fcp__card_block') as HTMLElement;
+  const back = () => block.children[0].textContent;
+
+  act(() => ref.current?.set([7]));
+  expect(back()).toBe('7'); // straight to target, no intermediate steps
 });
 
 test('separators renders colons only at the given indices', () => {

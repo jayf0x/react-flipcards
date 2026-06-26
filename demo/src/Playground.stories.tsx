@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect, useRef } from 'react';
-import FlipCardPanel, { type FlipCardRef } from 'react-flip-cards';
+import FlipCardPanel, { type FlipCardRef, type FlipMode } from 'react-flip-cards';
 import { Button, Stage } from './ui';
 
 /**
@@ -10,6 +10,7 @@ import { Button, Stage } from './ui';
  */
 type Args = {
   nrCards: number;
+  mode: FlipMode;
   duration: number;
   spacing: number;
   showDivider: boolean;
@@ -29,6 +30,11 @@ const meta: Meta<Args> = {
   title: 'Playground',
   argTypes: {
     nrCards: { control: { type: 'range', min: 1, max: 8, step: 1 }, description: 'Number of cards' },
+    mode: {
+      control: 'inline-radio',
+      options: ['sync', 'queue'],
+      description: 'sync jumps; queue rolls through digits'
+    },
     duration: { control: { type: 'range', min: 0.1, max: 2, step: 0.1 }, description: 'Flip duration (s)' },
     spacing: { control: { type: 'range', min: 0, max: 40, step: 1 }, description: 'Gap between cards (px)' },
     showDivider: { control: 'boolean' },
@@ -45,6 +51,7 @@ const meta: Meta<Args> = {
   },
   args: {
     nrCards: 4,
+    mode: 'sync',
     duration: 0.7,
     spacing: 8,
     showDivider: true,
@@ -86,6 +93,7 @@ export const Configurable: Story = {
           key={`${args.nrCards}-${args.showLabels}`}
           ref={ref}
           nrCards={args.nrCards}
+          mode={args.mode}
           duration={args.duration}
           spacing={args.spacing}
           showDivider={args.showDivider}

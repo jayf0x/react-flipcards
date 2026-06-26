@@ -31,6 +31,7 @@ const FlipCardPanel = React.forwardRef<FlipCardRef, FlipCardPanelProps>(function
     showDivider = true,
     dividerStyle,
     duration = 0.7,
+    mode = 'sync',
     spacing,
     onChange,
     className,
@@ -142,7 +143,7 @@ const FlipCardPanel = React.forwardRef<FlipCardRef, FlipCardPanelProps>(function
                 {labels[i]}
               </div>
             )}
-            <FlipCard value={value} style={cardStyle} />
+            <FlipCard value={value} mode={mode} style={cardStyle} />
           </div>
           {sepIndices.has(i) && <div className={clsx('fcp__separator', styles.fcp__colon)}></div>}
         </React.Fragment>

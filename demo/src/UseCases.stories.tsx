@@ -210,6 +210,40 @@ export const Countdown: Story = {
 };
 
 /* ------------------------------------------------------------------ */
+/* Rolling counter — mode='queue' rolls through every digit toward the */
+/* latest value, even when you jump several steps at once.             */
+/* ------------------------------------------------------------------ */
+export const RollingCounter: Story = {
+  render: () => {
+    const ref = useRef<FlipCardRef>(null);
+    const [n, setN] = useState(0);
+
+    const bump = (by: number) => {
+      const next = (n + by) % 1000;
+      setN(next);
+      ref.current?.set(toDigits(next, 3));
+    };
+
+    return (
+      <Stage
+        title='Rolling counter'
+        hint="mode='queue' rolls through every intermediate digit, always chasing the latest value."
+      >
+        <FlipCardPanel ref={ref} nrCards={3} mode='queue' blockStyle={cell} />
+        <div className='demo-controls'>
+          <Button primary onClick={() => bump(1)}>
+            +1
+          </Button>
+          <Button onClick={() => bump(7)}>+7</Button>
+          <Button onClick={() => bump(50)}>+50</Button>
+          <Button onClick={() => bump(1000 - n)}>Reset</Button>
+        </div>
+      </Stage>
+    );
+  }
+};
+
+/* ------------------------------------------------------------------ */
 /* Combination lock — spin wheels up/down, unlock on the secret code.  */
 /* onChange keeps `vals` in sync; ▼ uses set(i, value) to spin down.   */
 /* ------------------------------------------------------------------ */

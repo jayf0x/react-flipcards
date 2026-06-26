@@ -3,6 +3,16 @@ import React from 'react';
 /** A single card's displayed value. */
 export type Digit = number | string;
 
+/**
+ * How a card animates toward a new value.
+ * - `sync` (default): flip straight to the latest value. Never drops an update —
+ *   if a newer value arrives mid-flip, it flips again once the current flip ends.
+ * - `queue`: roll through every intermediate digit at flip speed (5 → 6 → 7 → 8),
+ *   always chasing the latest value. Numeric cards only; non-numeric falls back
+ *   to `sync`.
+ */
+export type FlipMode = 'sync' | 'queue';
+
 /** A card label — plain text or any React node (icon, markup, etc.). */
 export type FlipCardLabel = string | React.ReactElement;
 
@@ -76,6 +86,11 @@ export interface FlipCardPanelProps extends Omit<
    * @default 0.7
    */
   readonly duration?: number;
+  /**
+   * How cards animate toward new values.
+   * @default 'sync'
+   */
+  readonly mode?: FlipMode;
   /** Spacing between cards / separators. */
   readonly spacing?: number | string;
   /**

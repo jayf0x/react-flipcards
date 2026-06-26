@@ -116,22 +116,23 @@ ref.current?.set([0, 5, 0, 0]); // 05:00
 
 `FlipCardPanel` accepts all `div` props plus:
 
-| Name             | Type                         | Default | Description                                                                                     |
-| ---------------- | ---------------------------- | ------- | ----------------------------------------------------------------------------------------------- |
-| **nrCards**      | `number`                     | —       | **Required.** Number of flip cards to render.                                                   |
-| `initialValue`   | `number[]`                   | all `0` | Initial value (0–9) per card; read once at mount.                                               |
-| `onChange`       | `(values: number[]) => void` | —       | Fires whenever displayed values change — track state without mirroring it.                      |
-| `labels`         | `(string \| ReactElement)[]` | —       | Label under each card.                                                                          |
-| `showLabels`     | `boolean`                    | `true`  | Toggle label visibility.                                                                        |
-| `separators`     | `number[]`                   | —       | Show colons after these card indices, e.g. `[1, 3]` → `HH:MM:SS`.                               |
-| `showSeparators` | `boolean`                    | `false` | Show a colon between **every** card.                                                            |
-| `separatorStyle` | `{ color?, size? }`          | —       | Separator styling.                                                                              |
-| `blockStyle`     | `CSSProperties`              | —       | Card styles: `width`, `height`, `fontSize`, `color`, `background`, `borderRadius`, `boxShadow`. |
-| `labelStyle`     | `CSSProperties`              | —       | Label styles (`fontSize`, `color`, …).                                                          |
-| `showDivider`    | `boolean`                    | `true`  | Show the horizontal divider across each card.                                                   |
-| `dividerStyle`   | `{ color?, height? }`        | —       | Divider styling.                                                                                |
-| `duration`       | `number`                     | `0.7`   | Flip animation duration (seconds).                                                              |
-| `spacing`        | `number \| string`           | —       | Gap between cards / separators.                                                                 |
+| Name             | Type                         | Default | Description                                                                                                                                                     |
+| ---------------- | ---------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **nrCards**      | `number`                     | —       | **Required.** Number of flip cards to render.                                                                                                                   |
+| `initialValue`   | `number[]`                   | all `0` | Initial value (0–9) per card; read once at mount.                                                                                                               |
+| `onChange`       | `(values: number[]) => void` | —       | Fires whenever displayed values change — track state without mirroring it.                                                                                      |
+| `labels`         | `(string \| ReactElement)[]` | —       | Label under each card.                                                                                                                                          |
+| `showLabels`     | `boolean`                    | `true`  | Toggle label visibility.                                                                                                                                        |
+| `separators`     | `number[]`                   | —       | Show colons after these card indices, e.g. `[1, 3]` → `HH:MM:SS`.                                                                                               |
+| `showSeparators` | `boolean`                    | `false` | Show a colon between **every** card.                                                                                                                            |
+| `separatorStyle` | `{ color?, size? }`          | —       | Separator styling.                                                                                                                                              |
+| `blockStyle`     | `CSSProperties`              | —       | Card styles: `width`, `height`, `fontSize`, `color`, `background`, `borderRadius`, `boxShadow`.                                                                 |
+| `labelStyle`     | `CSSProperties`              | —       | Label styles (`fontSize`, `color`, …).                                                                                                                          |
+| `showDivider`    | `boolean`                    | `true`  | Show the horizontal divider across each card.                                                                                                                   |
+| `dividerStyle`   | `{ color?, height? }`        | —       | Divider styling.                                                                                                                                                |
+| `duration`       | `number`                     | `0.7`   | Flip animation duration (seconds).                                                                                                                              |
+| `mode`           | `'sync' \| 'queue'`          | `sync`  | `sync` flips straight to the latest value (never drops an update); `queue` rolls through every intermediate digit, chasing the latest. `queue` is numeric-only. |
+| `spacing`        | `number \| string`           | —       | Gap between cards / separators.                                                                                                                                 |
 
 ## Theming
 

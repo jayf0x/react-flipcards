@@ -20,6 +20,11 @@ genuinely doesn't apply, and say why):
 
 ## 1. Flip modes: `sync` (default) + `queue` + `spin`
 
+> **Status:** `sync` (no-drop) + `queue` shipped — chase-latest loop in
+> `src/FlipCard.tsx`, `mode` prop on the panel. `spin` deferred: it needs the
+> separate odometer renderer (see "Rendering split" below), kept as its own
+> experiment.
+
 ### The key fact
 
 `FlipCard` today is a **two-face flip**: one 180° rotation from the old value to
