@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.2
+
+- Add tenser
+
 ## v1.0.1
 
 - Internal/infrastructure changes only
