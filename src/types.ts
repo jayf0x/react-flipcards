@@ -8,10 +8,14 @@ export type Digit = number | string;
  * - `sync` (default): flip straight to the latest value. Never drops an update —
  *   if a newer value arrives mid-flip, it flips again once the current flip ends.
  * - `queue`: roll through every intermediate digit at flip speed (5 → 6 → 7 → 8),
- *   always chasing the latest value. Numeric cards only; non-numeric falls back
- *   to `sync`.
+ *   always chasing the latest value. Fixed time *per step*, so it can lag behind
+ *   a far/fast target. Numeric cards only; non-numeric falls back to `sync`.
+ * - `spin`: scroll an odometer strip straight to the latest value in a single
+ *   `duration`, however far it has to travel — speed scales with distance, so it
+ *   always lands on time. Renders as a vertical scroll, not a 3D flip. Numeric
+ *   cards only.
  */
-export type FlipMode = 'sync' | 'queue';
+export type FlipMode = 'sync' | 'queue' | 'spin';
 
 /** A card label — plain text or any React node (icon, markup, etc.). */
 export type FlipCardLabel = string | React.ReactElement;
