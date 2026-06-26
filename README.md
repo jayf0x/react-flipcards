@@ -8,6 +8,8 @@
 [![types included](https://img.shields.io/npm/types/react-flip-cards.svg)](https://www.npmjs.com/package/react-flip-cards)
 [![license](https://img.shields.io/npm/l/react-flip-cards.svg?color=blue)](./LICENSE)
 
+![Preview](./assets/preview.gif)
+
 **Ultra-lightweight (~2&nbsp;kB gzipped). Hyper-flexible. Zero config. It just works.**
 
 react-flip-cards renders a row of buttery-smooth 3D flip cards and gets out of your way. It doesn't decide _what_ the numbers mean — **you** own the values and push them from a clock, a timer, a score, a websocket, anything. Drive them declaratively with props or imperatively through a `ref`.
@@ -149,9 +151,7 @@ Everything is a CSS custom property (prefixed `--fcp-`). Override globally in yo
 
 ## Origin story
 
-I was looking for flip cards and found [`@leenguyen/react-flip-clock-countdown`](https://github.com/sLeeNguyen/react-flip-clock-countdown) — great component, but I needed something more customizable that I could drive with arbitrary values. A couple of Claude prompts later, this is the result, and I figured I'd share it.
-
-Full credit to [sLeeNguyen](https://github.com/sLeeNguyen) for the original flip-clock animation that inspired this. **If you just want a drop-in countdown clock, go use the original** — it's purpose-built for that. Reach for react-flip-cards when you want to own the values and bend the cards to any use case.
+I was looking for flip cards and found [`@leenguyen/react-flip-clock-countdown`](https://github.com/sLeeNguyen/react-flip-clock-countdown) — great component, but I needed something more customizable that I could drive with arbitrary values. A couple of prompts later, this is the result, and I figured I'd share it.
 
 ## License
 
