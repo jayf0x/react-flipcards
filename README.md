@@ -10,6 +10,8 @@
 
 ![Preview](./assets/preview.gif)
 
+> ⭐ **Star [this repository](https://github.com/jayf0x/react-flipcards) if you’d like to support its growth**
+
 ### **[▶ Live demo & copy-paste examples →](https://jayf0x.github.io/react-flipcards/)**
 
 ## The story
