@@ -19,6 +19,19 @@ test('renders initialValue', () => {
   expect(container.textContent).toContain('3');
 });
 
+test('initialValue is mount-only and rerenders do not reseed same card count', () => {
+  const ref = React.createRef<FlipCardRef>();
+  const { rerender } = render(<FlipCardPanel ref={ref} nrCards={2} initialValue={[1, 2]} showLabels={false} />);
+
+  expect(ref.current?.getValue()).toEqual([1, 2]);
+
+  rerender(<FlipCardPanel ref={ref} nrCards={2} initialValue={[3, 4]} showLabels={false} />);
+  expect(ref.current?.getValue()).toEqual([1, 2]);
+
+  rerender(<FlipCardPanel ref={ref} nrCards={3} initialValue={[3, 4, 5]} showLabels={false} />);
+  expect(ref.current?.getValue()).toEqual([3, 4, 5]);
+});
+
 test('renders labels when provided', () => {
   render(<FlipCardPanel nrCards={3} labels={['Hours', 'Minutes', 'Seconds']} />);
   expect(screen.getByText('Hours')).toBeInTheDocument();

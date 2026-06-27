@@ -40,14 +40,20 @@ const FlipCardPanel = React.forwardRef<FlipCardRef, FlipCardPanelProps>(function
     ...other
   } = props;
 
-  // Internal source of truth. Seeded from initialValue; the ref API mutates it.
-  // Only re-seed when the card count changes; initialValue is read once at mount.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const seed = React.useMemo(() => Array.from({ length: nrCards }, (_, i) => initialValue?.[i] ?? 0), [nrCards]);
-  const [values, setValues] = React.useState<number[]>(seed);
+  // Internal source of truth. Seeded from initialValue on mount; the ref API mutates it.
+  // Only re-seed when the card count changes.
+  const [values, setValues] = React.useState<number[]>(() =>
+    Array.from({ length: nrCards }, (_, i) => initialValue?.[i] ?? 0)
+  );
+  const prevNrCards = React.useRef(nrCards);
+  const initialValueRef = React.useRef(initialValue);
+  initialValueRef.current = initialValue;
 
-  // Re-seed if the number of cards changes.
-  React.useEffect(() => setValues(seed), [seed]);
+  React.useEffect(() => {
+    if (prevNrCards.current === nrCards) return;
+    prevNrCards.current = nrCards;
+    setValues(Array.from({ length: nrCards }, (_, i) => initialValueRef.current?.[i] ?? 0));
+  }, [nrCards]);
 
   // Notify the parent when values change — never on the initial mount. Compare
   // by reference (state always produces a new array on change) so a re-run of
