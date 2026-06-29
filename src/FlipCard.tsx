@@ -72,8 +72,8 @@ export default function FlipCard(props: FlipCardProps) {
     setPhase('flipping');
   }, [phase]);
 
-  const handleTransitionEnd = (e: { propertyName: string }): void => {
-    if (e.propertyName !== 'transform') return;
+  const handleTransitionEnd = (e: { target: EventTarget | null; currentTarget: EventTarget | null }): void => {
+    if (e.target !== e.currentTarget) return;
     // The face we just flipped to is now displayed. Settle to it (both faces
     // equal) and go idle; the start-loop decides whether to step again.
     displayed.current = card.next;

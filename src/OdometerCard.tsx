@@ -56,8 +56,8 @@ export default function OdometerCard(props: OdometerCardProps) {
     setPhase('spinning');
   }, [phase, delta]);
 
-  const handleTransitionEnd = (e: { propertyName: string }): void => {
-    if (e.propertyName !== 'transform') return;
+  const handleTransitionEnd = (e: { target: EventTarget | null; currentTarget: EventTarget | null }): void => {
+    if (e.target !== e.currentTarget) return;
     // Snap from the (possibly doubled) cell back into the first 0–9 copy with no
     // transition, then go idle; the chase loop decides whether to spin again.
     setCell((c) => c % 10);
