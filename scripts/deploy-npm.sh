@@ -58,23 +58,21 @@ COMMIT_LOG=$(git log --oneline "$PREV_TAG"..HEAD 2>/dev/null || git log --onelin
 echo ""
 echo "Updating CHANGELOG.md (Claude Code)..."
 
-# claude \
+claude \
+  --model haiku \
+  --no-session-persistence \
+  -p "Update CHANGELOG.md for a new NPM release of react-flip-cards.
+
+# claude
 #   --model haiku \
+#   --bare \
 #   --no-session-persistence \
 #   --dangerously-skip-permissions \
+#   --print \
+#   --tools "Bash,Edit" \
 #   --file ./backlog.md \
-#   -p "Update CHANGELOG.md for a new NPM release of react-flip-cards.
-
-claude
-  --model haiku \
-  --bare \
-  --no-session-persistence \
-  --dangerously-skip-permissions \
-  --print \
-  --tools "Bash,Edit" \
-  --file ./backlog.md \
-  --system-prompt "You are an expert changelog/backlog maintainer. Be concise and accurate." \
-  -p 'Update backlog based on git activity since last tag...'
+#   --system-prompt "You are an expert changelog/backlog maintainer. Be concise and accurate." \
+#   -p 'Update backlog based on git activity since last tag...'
 
 New version: $NEW
 Previous tag: $PREV_TAG
