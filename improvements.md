@@ -18,7 +18,7 @@ Future work focused on real performance gain, clean code, reliability, and edge-
   - `FlipCard.tsx` and `OdometerCard.tsx` both define local literal unions like `'idle' | 'armed' | 'flipping'` and `'idle' | 'armed' | 'spinning'`.
   - Move these into a shared type in `src/types.ts` or a small `src/animation.ts` helper for consistency and to avoid drift.
 
-- [ ] **Harden transition-end handling.**
+- [x] **Harden transition-end handling.**
   - `FlipCard.handleTransitionEnd` and `OdometerCard.handleTransitionEnd` do not inspect the transition event.
   - If nested transitions are added later, an unrelated `transitionend` could trigger a state update.
   - Use `event.propertyName === 'transform'` or a dedicated callback filter to make the handlers resilient.
@@ -34,6 +34,10 @@ Future work focused on real performance gain, clean code, reliability, and edge-
 - [ ] **Consider minor API cleanup in `FlipCardPanelRef.set`.**
   - The overload currently treats `undefined` array entries as "leave unchanged".
   - That is reasonable, but it may be worth documenting explicitly or switching to a clearer `setAll` + `setOne` split if the API evolves.
+
+- [x] **Global replace of all React.\* imports**
+  - All hooks use React.useEffect, change each to import {useEffect} from react
+  - What you can do is simply replace all instances with a global find and replace. Then use either "source.addMissingImports" or eslint. Or simply manually edit each case.
 
 ## Notes
 

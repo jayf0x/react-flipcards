@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import { CSSProperties, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
 import { Digit } from './types';
 
@@ -7,7 +7,7 @@ export interface OdometerCardProps {
   /** Value currently shown on the card. Changing it scrolls the strip. */
   value: Digit;
   className?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 }
 
 // 0–9 twice. A roll that wraps (e.g. 8 → 1) scrolls forward through the second
@@ -31,15 +31,15 @@ export default function OdometerCard(props: OdometerCardProps) {
   const { value, className, style } = props;
   // `cell` is the strip index the transform points at: 0–9 when settled, up to
   // 18 mid-spin (current digit + a forward delta of ≤ 9).
-  const [cell, setCell] = React.useState(() => digitOf(value));
-  const [delta, setDelta] = React.useState(0);
+  const [cell, setCell] = useState(() => digitOf(value));
+  const [delta, setDelta] = useState(0);
   // 'idle' settled · 'armed' about to spin (reflow pending) · 'spinning'.
-  const [phase, setPhase] = React.useState<'idle' | 'armed' | 'spinning'>('idle');
-  const stripRef = React.useRef<HTMLDivElement>(null);
+  const [phase, setPhase] = useState<'idle' | 'armed' | 'spinning'>('idle');
+  const stripRef = useRef<HTMLDivElement>(null);
 
   // Arm a spin whenever settled but behind the latest value (re-reads `value`
   // each idle pass, so it chases the latest target).
-  React.useEffect(() => {
+  useEffect(() => {
     if (phase !== 'idle') return;
     const cur = cell % 10;
     const target = digitOf(value);
@@ -49,14 +49,15 @@ export default function OdometerCard(props: OdometerCardProps) {
   }, [value, phase, cell]);
 
   // Force a reflow at the current cell so the transition restarts, then scroll.
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (phase !== 'armed') return;
     void stripRef.current?.offsetHeight;
     setCell((c) => (c % 10) + delta);
     setPhase('spinning');
   }, [phase, delta]);
 
-  const handleTransitionEnd = (): void => {
+  const handleTransitionEnd = (e: { propertyName: string }): void => {
+    if (e.propertyName !== 'transform') return;
     // Snap from the (possibly doubled) cell back into the first 0–9 copy with no
     // transition, then go idle; the chase loop decides whether to spin again.
     setCell((c) => c % 10);

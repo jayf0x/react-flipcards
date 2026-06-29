@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import { CSSProperties, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
 import { Digit, FlipMode } from './types';
 
@@ -12,7 +12,7 @@ export interface FlipCardProps {
    */
   mode?: FlipMode;
   className?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 }
 
 type FlipCardState = {
@@ -47,18 +47,18 @@ function stepToward(from: Digit, target: Digit, mode: FlipMode): Digit {
  */
 export default function FlipCard(props: FlipCardProps) {
   const { value, mode = 'sync', className, style } = props;
-  const [card, setCard] = React.useState<FlipCardState>({ current: value, next: value });
+  const [card, setCard] = useState<FlipCardState>({ current: value, next: value });
   // 'idle' settled · 'armed' faces set at 0°, about to flip · 'flipping' mid-flip.
-  const [phase, setPhase] = React.useState<'idle' | 'armed' | 'flipping'>('idle');
-  const cardRef = React.useRef<HTMLDivElement>(null);
+  const [phase, setPhase] = useState<'idle' | 'armed' | 'flipping'>('idle');
+  const cardRef = useRef<HTMLDivElement>(null);
   // The value committed to the visible front face. A ref so the start-loop can
   // compare against it without re-running for it.
-  const displayed = React.useRef(value);
+  const displayed = useRef(value);
 
   // Arm a flip whenever we're settled but behind the latest value. Re-reads
   // `value` on each run (after each step settles to 'idle'), so it always chases
   // the latest target.
-  React.useEffect(() => {
+  useEffect(() => {
     if (phase !== 'idle' || value === displayed.current) return;
     setCard({ current: displayed.current, next: stepToward(displayed.current, value, mode) });
     setPhase('armed');
@@ -66,13 +66,14 @@ export default function FlipCard(props: FlipCardProps) {
 
   // Once the new faces are committed at 0°, force a reflow so the browser
   // records that start state, then flip. Layout effect = runs before paint.
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (phase !== 'armed') return;
     void cardRef.current?.offsetHeight; // force reflow at 0° so the transition restarts
     setPhase('flipping');
   }, [phase]);
 
-  const handleTransitionEnd = (): void => {
+  const handleTransitionEnd = (e: { propertyName: string }): void => {
+    if (e.propertyName !== 'transform') return;
     // The face we just flipped to is now displayed. Settle to it (both faces
     // equal) and go idle; the start-loop decides whether to step again.
     displayed.current = card.next;
