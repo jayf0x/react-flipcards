@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.5
+
+- Fix: harden transition-end event handling
+
 ## v1.0.4
 
 - Fix: initialValue resets only on mount, not on rerenders
