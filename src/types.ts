@@ -17,6 +17,12 @@ export type Digit = number | string;
  */
 export type FlipMode = 'sync' | 'queue' | 'spin';
 
+/** Animation phase for a flip card. */
+export type FlipPhase = 'idle' | 'armed' | 'flipping';
+
+/** Animation phase for an odometer card. */
+export type SpinPhase = 'idle' | 'armed' | 'spinning';
+
 /** A card label — plain text or any React node (icon, markup, etc.). */
 export type FlipCardLabel = string | React.ReactElement;
 

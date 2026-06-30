@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import { CSSProperties, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
-import { Digit } from './types';
+import { SpinPhase } from './types';
 
 export interface OdometerCardProps {
   /** Value currently shown on the card. Changing it scrolls the strip. */
-  value: Digit;
+  value: number;
   className?: string;
   style?: CSSProperties;
 }
@@ -14,7 +14,7 @@ export interface OdometerCardProps {
 // copy (…8,9,0,1) instead of snapping backwards, then settles into the first.
 const STRIP = [...Array(10).keys(), ...Array(10).keys()];
 
-const digitOf = (v: Digit): number => (typeof v === 'number' ? ((v % 10) + 10) % 10 : 0);
+const digitOf = (v: number): number => ((v % 10) + 10) % 10;
 
 /**
  * The `spin` renderer: an odometer strip (digits stacked vertically) moved by a
@@ -34,7 +34,7 @@ export default function OdometerCard(props: OdometerCardProps) {
   const [cell, setCell] = useState(() => digitOf(value));
   const [delta, setDelta] = useState(0);
   // 'idle' settled · 'armed' about to spin (reflow pending) · 'spinning'.
-  const [phase, setPhase] = useState<'idle' | 'armed' | 'spinning'>('idle');
+  const [phase, setPhase] = useState<SpinPhase>('idle');
   const stripRef = useRef<HTMLDivElement>(null);
 
   // Arm a spin whenever settled but behind the latest value (re-reads `value`

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { CSSProperties, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
-import { Digit, FlipMode } from './types';
+import { Digit, FlipMode, FlipPhase } from './types';
 
 export interface FlipCardProps {
   /** Value currently shown on the card. Changing it triggers the flip animation. */
@@ -49,7 +49,7 @@ export default function FlipCard(props: FlipCardProps) {
   const { value, mode = 'sync', className, style } = props;
   const [card, setCard] = useState<FlipCardState>({ current: value, next: value });
   // 'idle' settled · 'armed' faces set at 0°, about to flip · 'flipping' mid-flip.
-  const [phase, setPhase] = useState<'idle' | 'armed' | 'flipping'>('idle');
+  const [phase, setPhase] = useState<FlipPhase>('idle');
   const cardRef = useRef<HTMLDivElement>(null);
   // The value committed to the visible front face. A ref so the start-loop can
   // compare against it without re-running for it.

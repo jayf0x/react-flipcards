@@ -9,12 +9,12 @@ Future work focused on real performance gain, clean code, reliability, and edge-
   - This is implemented via `useMemo(() => ..., [nrCards])`, which is subtly brittle and can make `initialValue` appear to be ignored unexpectedly.
   - Refactor to an explicit mount-only initialization pattern (`useState(() => ...)` + optional `useRef` sentinel) or document the semantics clearly.
 
-- [ ] **Make `OdometerCard` numeric-only behavior explicit and safe.**
+- [x] **Make `OdometerCard` numeric-only behavior explicit and safe.**
   - `OdometerCardProps.value` is typed as `Digit`, but `mode='spin'` only makes sense for numeric digits.
   - `digitOf()` currently coerces non-numeric values to `0`, which is a silent bug if a consumer passes a string.
   - Add a dedicated `NumericDigit` type / narrower prop type and/or runtime guard so the API matches the implementation.
 
-- [ ] **Centralize animation phase string unions.**
+- [x] **Centralize animation phase string unions.**
   - `FlipCard.tsx` and `OdometerCard.tsx` both define local literal unions like `'idle' | 'armed' | 'flipping'` and `'idle' | 'armed' | 'spinning'`.
   - Move these into a shared type in `src/types.ts` or a small `src/animation.ts` helper for consistency and to avoid drift.
     the handlers resilient.
