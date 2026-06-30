@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.6
+
+- Fix: enforce numeric-only behavior for OdometerCard component
+
 ## v1.0.5
 
 - Fix: harden transition-end event handling
