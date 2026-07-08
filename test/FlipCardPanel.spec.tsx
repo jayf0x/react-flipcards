@@ -219,6 +219,20 @@ test('spin wraps forward through the doubled strip (8 -> 1)', () => {
   expect(stripCell(strip)).toBe('-1'); // snaps back into the first copy, same digit shown
 });
 
+test('faces renders custom content indexed by value', () => {
+  const days = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+  render(<FlipCardPanel nrCards={1} initialValue={[2]} faces={days} showLabels={false} />);
+  expect(screen.getByTestId('fcp-container').textContent).toContain('We');
+});
+
+test('increment wraps at faces.length instead of 10', () => {
+  const days = ['Mo', 'Tu', 'We'];
+  const ref = React.createRef<FlipCardRef>();
+  render(<FlipCardPanel ref={ref} nrCards={1} initialValue={[2]} faces={days} showLabels={false} />);
+  act(() => ref.current?.increment(0));
+  expect(ref.current?.getValue()).toEqual([0]);
+});
+
 test('separators renders colons only at the given indices', () => {
   // 6 cards with colons after 1 and 3 -> 6 cards + 2 colons.
   render(<FlipCardPanel nrCards={6} separators={[1, 3]} showLabels={false} />);

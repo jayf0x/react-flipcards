@@ -33,6 +33,7 @@ const FlipCardPanel = forwardRef<FlipCardRef, FlipCardPanelProps>(function FlipC
     dividerStyle,
     duration = 0.7,
     mode = 'sync',
+    faces,
     spacing,
     onChange,
     className,
@@ -81,11 +82,12 @@ const FlipCardPanel = forwardRef<FlipCardRef, FlipCardPanelProps>(function FlipC
             ? prev.map((v, i) => (a[i] !== undefined ? a[i] : v))
             : prev.map((v, i) => (i === a ? (b as number) : v))
         ),
-      increment: (index) => setValues((prev) => prev.map((v, i) => (i === index ? (v + 1) % 10 : v))),
+      increment: (index) =>
+        setValues((prev) => prev.map((v, i) => (i === index ? (v + 1) % (faces?.length ?? 10) : v))),
       reset: () => setValues((prev) => prev.map(() => 0)),
       getValue: () => valuesRef.current
     }),
-    []
+    [faces]
   );
 
   // Card indices that get a trailing colon. Explicit `separators` wins;
@@ -153,7 +155,7 @@ const FlipCardPanel = forwardRef<FlipCardRef, FlipCardPanelProps>(function FlipC
             {mode === 'spin' ? (
               <OdometerCard value={value} style={cardStyle} />
             ) : (
-              <FlipCard value={value} mode={mode} style={cardStyle} />
+              <FlipCard value={faces ? (faces[value] ?? value) : value} mode={mode} style={cardStyle} />
             )}
           </div>
           {sepIndices.has(i) && <div className={clsx('fcp__separator', styles.fcp__colon)}></div>}

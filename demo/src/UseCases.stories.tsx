@@ -319,3 +319,27 @@ export const CombinationLock: Story = {
     );
   }
 };
+
+/* ------------------------------------------------------------------ */
+/* Weekday card — faces={[...]} renders custom content instead of the */
+/* raw 0-6 index. increment() wraps at faces.length.                   */
+/* ------------------------------------------------------------------ */
+const DAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+export const WeekdayCard: Story = {
+  render: () => {
+    const ref = useRef<FlipCardRef>(null);
+
+    return (
+      <Stage title='Weekday card' hint='faces={[...]} indexes card values into custom content.'>
+        <FlipCardPanel ref={ref} nrCards={1} faces={DAYS} blockStyle={{ ...cell, width: 76 }} showLabels={false} />
+        <div className='demo-controls'>
+          <Button primary onClick={() => ref.current?.increment(0)}>
+            Next day
+          </Button>
+          <Button onClick={() => ref.current?.reset()}>Reset</Button>
+        </div>
+      </Stage>
+    );
+  }
+};

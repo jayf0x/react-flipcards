@@ -101,6 +101,22 @@ export interface FlipCardPanelProps extends Omit<
    * @default 'sync'
    */
   readonly mode?: FlipMode;
+  /**
+   * Custom face content, indexed by value: `faces[value]` is displayed instead
+   * of the raw number, e.g. `['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']` for a
+   * weekday card. The `set`/`increment` ref API still works with numeric
+   * indices; `increment` wraps at `faces.length` instead of 10.
+   *
+   * `queue`/`spin` modes stay numeric-only (see `mode`) — with `faces` set they
+   * fall back to jumping straight to the target instead of rolling through
+   * intermediate faces.
+   *
+   * Face content can vary in width; set `blockStyle.width` to fix a width
+   * rather than relying on the component to guess.
+   *
+   * Omit for the numeric 0–9 default.
+   */
+  readonly faces?: Digit[];
   /** Spacing between cards / separators. */
   readonly spacing?: number | string;
   /**
