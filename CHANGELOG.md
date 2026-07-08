@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.0.7
+
 - Add: `faces` prop on `FlipCardPanel` — custom per-card content indexed by value (e.g. weekday labels). `increment` wraps at `faces.length`. `queue`/`spin` stay numeric-only and ignore `faces`.
 
 ## v1.0.6
