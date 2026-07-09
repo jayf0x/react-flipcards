@@ -18,13 +18,6 @@ genuinely doesn't apply, and say why):
 
 ---
 
-## ITEM: Functional updater for `set`
-
-`ref.current?.set((prev) => next)`, mirroring `useState`'s updater form,
-alongside the existing `set(values[])` / `set(index, value)` overloads.
-`increment` can become sugar for this once it exists. Cheap, familiar,
-no new concepts.
-
 ## ITEM: Export `toDigits` as a real helper
 
 `demo/src/ui.tsx` already has `toDigits(n, width): number[]` (zero-padded digit

@@ -343,3 +343,25 @@ export const WeekdayCard: Story = {
     );
   }
 };
+
+/* ------------------------------------------------------------------ */
+/* Functional set() — set((prev) => next), mirroring useState's        */
+/* updater form. No local mirror of the values needed to bump them.    */
+/* ------------------------------------------------------------------ */
+export const FunctionalUpdate: Story = {
+  render: () => {
+    const ref = useRef<FlipCardRef>(null);
+
+    return (
+      <Stage title='Functional set()' hint='set((prev) => prev.map((v) => (v + 1) % 10)) — no local value mirror.'>
+        <FlipCardPanel ref={ref} nrCards={3} blockStyle={cell} />
+        <div className='demo-controls'>
+          <Button primary onClick={() => ref.current?.set((prev) => prev.map((v) => (v + 1) % 10))}>
+            +1 all
+          </Button>
+          <Button onClick={() => ref.current?.reset()}>Reset</Button>
+        </div>
+      </Stage>
+    );
+  }
+};

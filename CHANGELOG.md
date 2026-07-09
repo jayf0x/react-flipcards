@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add: `set()` accepts a functional updater — `set((prev) => next)`, mirroring `useState`, alongside the existing `set(values[])` / `set(index, value)` overloads.
+
 ## v1.0.7
 
 - Add: `faces` prop on `FlipCardPanel` — custom per-card content indexed by value (e.g. weekday labels). `increment` wraps at `faces.length`. `queue`/`spin` stay numeric-only and ignore `faces`.

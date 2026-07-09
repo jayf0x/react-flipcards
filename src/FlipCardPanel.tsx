@@ -17,6 +17,7 @@ import { convertToPx } from './utils';
  * const ref = useRef<FlipCardRef>(null);
  * <FlipCardPanel ref={ref} nrCards={3} />
  * ref.current?.set([1, 2, 3]);
+ * ref.current?.set((prev) => prev.map((v) => v + 1));
  */
 const FlipCardPanel = forwardRef<FlipCardRef, FlipCardPanelProps>(function FlipCardPanel(props, ref) {
   const {
@@ -75,13 +76,14 @@ const FlipCardPanel = forwardRef<FlipCardRef, FlipCardPanelProps>(function FlipC
   useImperativeHandle(
     ref,
     () => ({
-      // set(values[]) sets every card; set(index, value) sets a single card.
-      set: (a: number[] | number, b?: number) =>
-        setValues((prev) =>
-          Array.isArray(a)
-            ? prev.map((v, i) => (a[i] !== undefined ? a[i] : v))
-            : prev.map((v, i) => (i === a ? (b as number) : v))
-        ),
+      // set(values[]) sets every card; set(index, value) sets a single card;
+      // set(updater) is a functional update over the current values.
+      set: (a: number[] | number | ((prev: number[]) => number[]), b?: number) =>
+        setValues((prev) => {
+          if (typeof a === 'function') return a(prev);
+          if (Array.isArray(a)) return prev.map((v, i) => (a[i] !== undefined ? a[i] : v));
+          return prev.map((v, i) => (i === a ? (b as number) : v));
+        }),
       increment: (index) =>
         setValues((prev) => prev.map((v, i) => (i === index ? (v + 1) % (faces?.length ?? 10) : v))),
       reset: () => setValues((prev) => prev.map(() => 0)),

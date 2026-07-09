@@ -35,6 +35,8 @@ export interface FlipCardRef {
   set(values: number[]): void;
   /** Set a single card at `index` to `value`, e.g. `set(1, 7)`. */
   set(index: number, value: number): void;
+  /** Functional update, e.g. `set((prev) => prev.map((v) => v + 1))`. */
+  set(updater: (prev: number[]) => number[]): void;
   /** Increment a single card at `index` (wraps 9 → 0). */
   increment(index: number): void;
   /** Reset all cards back to 0. */

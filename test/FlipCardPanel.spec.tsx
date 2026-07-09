@@ -219,6 +219,13 @@ test('spin wraps forward through the doubled strip (8 -> 1)', () => {
   expect(stripCell(strip)).toBe('-1'); // snaps back into the first copy, same digit shown
 });
 
+test('set accepts a functional updater', () => {
+  const ref = React.createRef<FlipCardRef>();
+  render(<FlipCardPanel ref={ref} nrCards={3} initialValue={[1, 2, 3]} showLabels={false} />);
+  act(() => ref.current?.set((prev) => prev.map((v) => v + 1)));
+  expect(ref.current?.getValue()).toEqual([2, 3, 4]);
+});
+
 test('faces renders custom content indexed by value', () => {
   const days = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
   render(<FlipCardPanel nrCards={1} initialValue={[2]} faces={days} showLabels={false} />);

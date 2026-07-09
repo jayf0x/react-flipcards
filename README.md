@@ -61,13 +61,14 @@ Scoreboards, countdowns, odometers, combination locks — they're all the same c
 
 `FlipCardPanel` forwards a `ref` exposing:
 
-| Method                     | Description                                 |
-| -------------------------- | ------------------------------------------- |
-| `set(values: number[])`    | Set every card at once; changed cards flip. |
-| `set(index, value)`        | Set a single card, e.g. `set(1, 7)`.        |
-| `increment(index: number)` | Increment one card (wraps `9 → 0`).         |
-| `reset()`                  | Reset all cards to `0`.                     |
-| `getValue(): number[]`     | Read the currently displayed values.        |
+| Method                     | Description                                                      |
+| -------------------------- | ---------------------------------------------------------------- |
+| `set(values: number[])`    | Set every card at once; changed cards flip.                      |
+| `set(index, value)`        | Set a single card, e.g. `set(1, 7)`.                             |
+| `set(updater)`             | Functional update, e.g. `set((prev) => prev.map((v) => v + 1))`. |
+| `increment(index: number)` | Increment one card (wraps `9 → 0`).                              |
+| `reset()`                  | Reset all cards to `0`.                                          |
+| `getValue(): number[]`     | Read the currently displayed values.                             |
 
 ## Props
 
