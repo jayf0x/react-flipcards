@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.0.8
+
 - Add: `set()` accepts a functional updater — `set((prev) => next)`, mirroring `useState`, alongside the existing `set(values[])` / `set(index, value)` overloads.
 
 ## v1.0.7
