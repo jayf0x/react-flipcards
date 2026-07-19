@@ -33,7 +33,7 @@ You own the values. Render a panel and push numbers into it — declaratively vi
 
 ```tsx
 import { useEffect, useRef } from 'react';
-import FlipCardPanel, { FlipCardRef } from 'react-flip-cards';
+import { FlipCardPanel, FlipCardRef } from 'react-flip-cards';
 import 'react-flip-cards/styles.css';
 
 const pad = (n: number) => String(n).padStart(2, '0').split('').map(Number);

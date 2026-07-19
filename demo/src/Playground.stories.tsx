@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useRef } from 'react';
-import FlipCardPanel, { type FlipCardRef } from 'react-flip-cards';
+import { FlipCardPanel, type FlipCardRef } from 'react-flip-cards';
 import { Button, Stage } from './ui';
 
 /**

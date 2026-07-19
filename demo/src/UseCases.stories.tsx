@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useRef, useState } from 'react';
-import FlipCardPanel, { type FlipCardRef } from 'react-flip-cards';
+import { FlipCardPanel, type FlipCardRef } from 'react-flip-cards';
 import { Button, Stage, toDigits } from './ui';
 
 const meta: Meta = { title: 'Use cases' };
@@ -48,7 +48,7 @@ export const LiveClock: Story = {
         language: 'tsx',
         // Self-contained, copy-paste-ready version of this story.
         code: `import { useEffect, useRef } from 'react';
-import FlipCardPanel, { type FlipCardRef } from 'react-flip-cards';
+import { FlipCardPanel, type FlipCardRef } from 'react-flip-cards';
 
 const pad = (n: number) => String(n).padStart(2, '0').split('').map(Number);
 

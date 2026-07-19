@@ -65,6 +65,8 @@ breaking rename post-1.0 public release — only worth doing bundled into an
 actual major version bump, with the old name re-exported + deprecated for one
 cycle. Not a drive-by fix.
 
+Note: instead of breaking change. Simply export both new and old name, but deprecate the old.
+
 ## ITEM (deferred to next major): Unify `FlipCard` / `OdometerCard` public shape
 
 `FlipCardPanel` already switches between them internally by `mode`
@@ -74,26 +76,3 @@ give both a shared `CardProps` shape (not necessarily merge the files —
 the animations are genuinely different), so swapping one for the other
 standalone doesn't mean relearning a prop surface. Pair with the rename item
 above since both touch the public export list at the same time.
-
-## ITEM: Export shape — named exports only, reconsider default export
-
-Currently `FlipCardPanel` is the default export; everything else
-(`FlipCard`, `OdometerCard`, types, future `toDigits`) is named. Proposal:
-make every export named (drop the default), for consistency and easier
-tooling (auto-import, refactors). This is a breaking change for any consumer
-doing `import FlipCardPanel from 'react-flip-cards'` — bundle it into the
-same major version as the rename item above rather than shipping alone.
-
-Also considered and rejected: a `react-flip-cards/helpers` subpath export.
-Not worth the `package.json#exports` + build-output complexity for a single
-helper function; revisit only if the helpers surface actually grows.
-
-## REJECTED: Render-prop / children-as-function escape hatch
-
-`<FlipCardPanel>{(values) => ...}</FlipCardPanel>` style full-control
-rendering. Composition already gives consumers this escape hatch — `FlipCard`
-is already exported standalone, so anyone who wants full layout/styling
-control can just not use `FlipCardPanel` and compose `FlipCard`s directly. A
-render prop would duplicate an escape hatch that already exists. No signal
-yet that composition can't solve this — revisit only if someone hits a real
-wall.

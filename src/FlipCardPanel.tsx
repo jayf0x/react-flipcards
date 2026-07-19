@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { CSSProperties, Fragment, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import FlipCard from './FlipCard';
-import OdometerCard from './OdometerCard';
+import { FlipCard } from './FlipCard';
+import { OdometerCard } from './OdometerCard';
 import styles from './styles.module.css';
 import { FlipCardPanelProps, FlipCardRef } from './types';
 import { convertToPx } from './utils';
@@ -19,7 +19,7 @@ import { convertToPx } from './utils';
  * ref.current?.set([1, 2, 3]);
  * ref.current?.set((prev) => prev.map((v) => v + 1));
  */
-const FlipCardPanel = forwardRef<FlipCardRef, FlipCardPanelProps>(function FlipCardPanel(props, ref) {
+export const FlipCardPanel = forwardRef<FlipCardRef, FlipCardPanelProps>(function FlipCardPanel(props, ref) {
   const {
     nrCards,
     initialValue,
@@ -166,5 +166,3 @@ const FlipCardPanel = forwardRef<FlipCardRef, FlipCardPanelProps>(function FlipC
     </div>
   );
 });
-
-export default FlipCardPanel;

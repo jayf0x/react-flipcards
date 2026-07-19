@@ -45,7 +45,7 @@ function stepToward(from: Digit, target: Digit, mode: FlipMode): Digit {
  * a reflow in a layout effect, then add the flip class. That makes the restart
  * independent of paint timing.
  */
-export default function FlipCard(props: FlipCardProps) {
+export function FlipCard(props: FlipCardProps) {
   const { value, mode = 'sync', className, style } = props;
   const [card, setCard] = useState<FlipCardState>({ current: value, next: value });
   // 'idle' settled · 'armed' faces set at 0°, about to flip · 'flipping' mid-flip.

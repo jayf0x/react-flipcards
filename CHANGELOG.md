@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Breaking: `FlipCardPanel` is now a named export, not the default. `import { FlipCardPanel } from 'react-flip-cards'` instead of `import FlipCardPanel from 'react-flip-cards'`.
+
 ## v1.0.8
 
 - Add: `set()` accepts a functional updater — `set((prev) => next)`, mirroring `useState`, alongside the existing `set(values[])` / `set(index, value)` overloads.

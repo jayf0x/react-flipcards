@@ -27,7 +27,7 @@ const digitOf = (v: number): number => ((v % 10) + 10) % 10;
  * `armed` step forces a reflow before adding the transition so a rapid retarget
  * can't strand it (same reasoning as `FlipCard`).
  */
-export default function OdometerCard(props: OdometerCardProps) {
+export function OdometerCard(props: OdometerCardProps) {
   const { value, className, style } = props;
   // `cell` is the strip index the transform points at: 0–9 when settled, up to
   // 18 mid-spin (current digit + a forward delta of ≤ 9).
