@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.0.9
+
 - Breaking: `FlipCardPanel` is now a named export, not the default. `import { FlipCardPanel } from 'react-flip-cards'` instead of `import FlipCardPanel from 'react-flip-cards'`.
 
 ## v1.0.8
