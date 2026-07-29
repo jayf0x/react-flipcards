@@ -1,6 +1,6 @@
 {
   "name": "react-flip-cards",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Tiny (~2kB), ref-driven 3D flip-card component for React. One flexible primitive for flip clocks, countdowns, counters, tickers and scoreboards.",
   "author": "jayf0x",
   "license": "MIT",
