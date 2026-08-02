@@ -65,6 +65,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "scan": "bash ./scripts/opengrep-scan.sh",
     "prepare": "husky",
     "prepublishOnly": "bun run build",
     "npm:deploy": "bash ./scripts/deploy-npm.sh",
