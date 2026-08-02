@@ -12,7 +12,16 @@ if ! git diff --quiet || ! git diff --cached --quiet; then
   exit 1
 fi
 
+# ── build + typecheck + test ─────────────────────────────────────────────────
+bun run scan
+bun run build
+bun run typecheck
+bun run test
+bun run format
+
 # ── version bump ──────────────────────────────────────────────────────────────
+# react-flipcards-specific: unlike git-gimme's patch-json.ts (patch-only), this
+# release flow supports patch/minor/major via the BUMP env var (defaults to patch).
 CURRENT=$(bun -e "import pkg from './package.json' with {type:'json'}; process.stdout.write(pkg.version)")
 MAJOR=$(echo "$CURRENT" | cut -d. -f1)
 MINOR=$(echo "$CURRENT" | cut -d. -f2)
@@ -43,55 +52,11 @@ bun -e "
   writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
 "
 
-# ── build + typecheck + test ─────────────────────────────────────────────────
-bun run scan
-bun run build
-bun run typecheck
-bun run test
-
-bun run format
-
-# ── update CHANGELOG.md via Claude Code CLI ───────────────────────────────────
-# PREV_TAG is the latest existing tag — the new $TAG isn't created until below.
-PREV_TAG=$(git tag --sort=-version:refname | grep "^v" | head -1 || true)
-COMMIT_LOG=$(git log --oneline "$PREV_TAG"..HEAD 2>/dev/null || git log --oneline | head -20)
-
-echo ""
-echo "Updating CHANGELOG.md (Claude Code)..."
-
-claude \
-  --model haiku \
-  --no-session-persistence \
-  -p "Update CHANGELOG.md for a new NPM release of react-flip-cards.
-
-# claude
-#   --model haiku \
-#   --bare \
-#   --no-session-persistence \
-#   --dangerously-skip-permissions \
-#   --print \
-#   --tools "Bash,Edit" \
-#   --file ./backlog.md \
-#   --system-prompt "You are an expert changelog/backlog maintainer. Be concise and accurate." \
-#   -p 'Update backlog based on git activity since last tag...'
-
-New version: $NEW
-Previous tag: $PREV_TAG
-
-Commits since $PREV_TAG:
-$COMMIT_LOG
-
-Instructions:
-- Read CHANGELOG.md first
-- Add a new '## v$NEW' section at the very top (directly below the '# Changelog' heading)
-- Only include meaningful changes: features, bug fixes, breaking changes, perf improvements
-- Skip any commit that is only: chore, deploy, dist, demo, docs, README, backlog, format, prettier, gif, preview, CI internals
-- Each bullet: concise, imperative tense, 1 line (e.g. 'Add: custom transform option')
-- If zero meaningful commits exist, write '- Internal/infrastructure changes only'
-- Do NOT modify any existing changelog entries" \
-  --allowedTools "Read,Edit,Write" 2>&1
-
-bun run format
+# ── release notes (CHANGELOG.md + README's "What's new" table) ────────────────
+# Summarizes the commits since the last tag via `claude -p`; never fatal, so a
+# release is never blocked on it. (react-flipcards' README has no WHATSNEW tag
+# yet, so only the CHANGELOG.md side of this script actually applies today.)
+bun "$(dirname "$0")/release-notes.ts" "$NEW" || echo "! release notes step failed — continuing"
 
 # ── commit + tag + push (GHA workflow handles npm publish) ────────────────────
 git add package.json bun.lock README.md CHANGELOG.md

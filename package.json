@@ -68,7 +68,7 @@
     "scan": "bash ./scripts/opengrep-scan.sh",
     "prepare": "husky",
     "prepublishOnly": "bun run build",
-    "npm:deploy": "bash ./scripts/deploy-npm.sh",
+    "npm:deploy": "bash ./scripts/npm/publish-npm.sh",
     "demo:deploy": "bash ./scripts/deploy-demo.sh",
     "size": "size-limit"
   },
