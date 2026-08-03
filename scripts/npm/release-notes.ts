@@ -39,7 +39,7 @@ if (!commits) {
   process.exit(0);
 }
 
-const prompt = `Summarize an npm release of "react-flip-cards" (a tiny, ref-driven 3D flip-card component for React, used to build flip clocks, countdowns, counters, tickers and scoreboards).
+const prompt = `Summarize an npm release of "git-gimme" (a giget-backed \`git gimme\` subcommand for downloading a single file or folder from a repo without a full clone).
 
 New version: ${version}
 Previous tag: ${prevTag || '(none)'}
